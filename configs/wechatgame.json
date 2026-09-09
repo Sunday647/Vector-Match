@@ -1,0 +1,22 @@
+{
+  "name": "彩线小憩",
+  "platform": "wechatgame",
+  "buildPath": "project://build",
+  "outputName": "wechatgame",
+  "startScene": "7b4329e4-f708-4ad4-9ef9-1a910b79b389",
+  "scenes": [
+    {
+      "url": "db://assets/scenes/Main.scene",
+      "uuid": "7b4329e4-f708-4ad4-9ef9-1a910b79b389"
+    }
+  ],
+  "debug": true,
+  "md5Cache": false,
+  "packages": {
+    "wechatgame": {
+      "appid": "wx6ac3f5090a6b99c5",
+      "orientation": "portrait",
+      "separateEngine": false
+    }
+  }
+}

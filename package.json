@@ -1,0 +1,11 @@
+{
+  "name": "color-arrow-garden",
+  "uuid": "ef7d9fd5-ae6e-4d8f-8fb3-8ae2c7e0f1f8",
+  "creator": {
+    "version": "3.8.8"
+  },
+  "scripts": {
+    "test": "node tools/test.cjs",
+    "generate": "node tools/generate.cjs"
+  }
+}

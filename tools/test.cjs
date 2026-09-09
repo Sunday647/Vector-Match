@@ -1,0 +1,18 @@
+require('./ts-loader.cjs');const assert=require('assert');const fs=require('fs');const {Session,solve,canExit,validate,Gesture,hitArrow,blockedBy,selfBlocked}=require('../assets/scripts/core/Rules.ts');
+let count=0;function test(name,fn){fn();count++;console.log('PASS '+name);}
+const line=(id,points)=>({id,color:'#279ADB',points:points.map(([x,y])=>({x,y}))});
+const simple={id:'test',version:1,width:10,height:10,name:'test',subtitle:'',arrows:[line('a',[[1,1],[2,1]]),line('b',[[6,1],[6,2]]),line('c',[[1,3],[2,3]]),line('d',[[6,3],[6,4]]),line('e',[[1,5],[2,5]]),line('f',[[6,5],[6,6]])]};
+test('远处障碍被检测，重复误点去重',()=>{const s=new Session(simple);assert.equal(s.click('a'),'penalty');assert.equal(s.hearts,2);assert.equal(s.click('a'),'blocked');assert.equal(s.click('a'),'blocked');assert.equal(s.hearts,2);});
+test('移除障碍后红线能退出且不返心',()=>{const s=new Session(simple);s.click('e');assert.equal(s.click('f'),'removed');assert.equal(s.click('e'),'removed');assert.equal(s.hearts,2);assert(s.penalized.has('e'));});
+test('不同箭头扣至0后禁止操作',()=>{const s=new Session(simple);s.click('a');s.click('c');s.click('e');assert.equal(s.status,'lost');assert.equal(s.click('f'),'ignored');assert.equal(s.hearts,0);});
+test('存档恢复去重与消除顺序，新挑战重置',()=>{const s=new Session(simple);s.click('a');s.click('f');const t=new Session(simple);assert(t.restore(s.snapshot()));assert.equal(t.click('a'),'blocked');assert.equal(t.hearts,2);assert(t.removed.has('f'));assert.equal(new Session(simple).hearts,3);});
+test('拒绝损坏存档及不合法消除记录',()=>{const s=new Session(simple);const snap=s.snapshot();assert(!s.restore({...snap,removed:['a']}));assert(!s.restore({...snap,hearts:-1}));});
+test('相邻行有间距时不会误判阻挡',()=>{assert(!blockedBy(simple.arrows[0],line('x',[[4,2],[5,2]]),simple));});
+test('循环依赖判无解',()=>{const l={...simple,arrows:[line('a',[[1,1],[2,1]]),line('b',[[5,1],[4,1]])]};assert.equal(solve(l),null);assert.throws(()=>validate(l));});
+test('自身出口撞回旧线段判为死结',()=>{const l={id:'self',version:1,width:10,height:8,name:'',subtitle:'',arrows:[line('a',[[2,4],[3,4],[3,3],[2,3],[2,4]])]};assert(selfBlocked(l.arrows[0],l));assert(!canExit(l.arrows[0],l));});
+test('折线按自身路径抽出，不按刚体平移误挡',()=>{const l={id:'pull',version:1,width:10,height:8,name:'',subtitle:'',arrows:[line('a',[[2,4],[3,4],[3,3],[4,3]]),line('b',[[3,5],[3,6]])]};assert(!blockedBy(l.arrows[0],l.arrows[1],l));assert(canExit(l.arrows[0],l));});
+test('热区模糊和空白不选中',()=>{const l={...simple,arrows:[line('a',[[1,1],[2,1]]),line('b',[[1,2],[2,2]])]};assert.equal(hitArrow(l,new Set(),{x:1.5,y:1.5},1),null);assert.equal(hitArrow(l,new Set(),{x:1.5,y:1.03},.4),'a');assert.equal(hitArrow(l,new Set(),{x:9,y:9},.4),null);});
+test('双指释放残留单指不触发点击',()=>{const g=new Gesture();g.start(1,{x:0,y:0});g.start(2,{x:50,y:0});assert(!g.end(2));assert(!g.end(1));g.start(3,{x:1,y:1});assert(g.end(3));});
+test('拖动与取消不触发点击',()=>{const g=new Gesture();g.start(1,{x:0,y:0});g.move(1,{x:20,y:0});assert(!g.end(1));g.start(2,{x:0,y:0});g.clear();assert(!g.end(2));});
+for(const id of ['cloud','cat','dog'])test(id+' 最终数据求解及任意合法顺序不死锁',()=>{const l=JSON.parse(fs.readFileSync('assets/resources/levels/'+id+'.json'));validate(l);const sol=solve(l);assert.equal(sol.length,l.arrows.length);for(let run=0;run<3;run++){const s=new Session(l);while(s.status==='playing'){const options=l.arrows.filter(a=>canExit(a,l,s.removed));assert(options.length);const a=options[(s.removed.size*7+run)%options.length];assert.equal(s.click(a.id),'removed');}assert.equal(s.status,'won');assert.equal(s.hearts,3);}const reversed=[...l.arrows].reverse(),removed=new Set();for(const a of reversed){assert(canExit(a,l,removed));removed.add(a.id);}});
+console.log(`${count} checks passed`);

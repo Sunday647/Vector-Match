@@ -1,0 +1,15 @@
+{
+  "name": "彩线小憩",
+  "platform": "web-mobile",
+  "buildPath": "project://build",
+  "outputName": "web-mobile",
+  "startScene": "7b4329e4-f708-4ad4-9ef9-1a910b79b389",
+  "scenes": [
+    {
+      "url": "db://assets/scenes/Main.scene",
+      "uuid": "7b4329e4-f708-4ad4-9ef9-1a910b79b389"
+    }
+  ],
+  "debug": true,
+  "md5Cache": false
+}
