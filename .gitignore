@@ -1,7 +1,17 @@
+# Cocos Creator generated state and build output
 library/
 temp/
+build/
 local/
 profiles/
-build/
+
+# Dependencies and local tooling
 node_modules/
+.idea/
+.vscode/
+
+# OS/editor noise
 .DS_Store
+*.swp
+*.swo
+*.log
