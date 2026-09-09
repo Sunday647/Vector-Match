@@ -3,6 +3,7 @@ import { Arrow, Level, Point, Session, Gesture, canExit, hitArrow, direction, LI
 import { solarTermForLevel } from './core/SolarTerms';
 const {ccclass}=_decorator;
 const INK='#344C65', MUTED='#8498AC', BLUE='#428EE8', PAPER='#FFFDF8';
+const STORAGE_KEY='one-arrow-clear-v1', LEGACY_STORAGE_KEY='color-arrow-v1';
 const C=(s:string)=>new Color().fromHEX(s);
 type Button={x:number;y:number;w:number;h:number;run:()=>void};
 @ccclass('Main')
@@ -20,7 +21,7 @@ export class Main extends Component {
         this.root=this.make('Game',this.node);this.root.setPosition(0,0);
         this.audio=this.node.addComponent(AudioSource);
         for(let i=0;i<3;i++)resources.load('audio/tone'+i,AudioClip,(err,clip)=>{if(!err)this.tones[i]=clip;});
-        try{this.saved=JSON.parse(sys.localStorage.getItem('color-arrow-v1')||'{}');this.sound=this.saved.sound!==false;}catch{this.saved={};}
+        try{this.saved=JSON.parse(sys.localStorage.getItem(STORAGE_KEY)||sys.localStorage.getItem(LEGACY_STORAGE_KEY)||'{}');this.sound=this.saved.sound!==false;}catch{this.saved={};}
         const loading=this.text(this.root,'正在铺开彩色的小世界…',0,0,28,MUTED,650);
         let loaded=0;['cloud','cat','dog'].forEach((id,i)=>resources.load('levels/'+id,JsonAsset,(err,asset)=>{
             if(err){loading.string='关卡加载失败，请重新打开';return;}
@@ -99,7 +100,7 @@ export class Main extends Component {
     if(this.wrong){const m=this.wrongMotion(this.wrong.time);const color=this.wrong.time>=0.62&&this.wrong.finalRed?'#ED475D':this.wrong.color;this.renderArrow(this.wrong.arrow,color,m.offset,m.shake);}
     if(this.leaving){const a=this.leaving.arrow;const length=a.points.length-1;const d=direction(a),h=a.points[a.points.length-1];const exit=d.x>0?this.session.level.width-h.x:d.x<0?h.x+1:d.y>0?this.session.level.height-h.y:h.y+1;this.renderArrow(a,this.leaving.color,(length+exit+2)*Math.min(1,this.leaving.time/0.55));}}
     private updateHUD(){this.hearts.string=Array.from({length:3},(_,i)=>i<this.session.hearts?'♥':'♡').join(' ');this.progress.string=`${this.session.level.subtitle}  ·  ${this.session.removed.size}/${this.session.level.arrows.length}`;}
-    private save(){if(!this.session)return;this.saved.index=this.index;this.saved.sound=this.sound;this.saved.attempts=this.saved.attempts||{};this.saved.attempts[this.session.level.id]=this.session.snapshot();try{sys.localStorage.setItem('color-arrow-v1',JSON.stringify(this.saved));}catch{this.message('本次进度暂时无法保存');}}
+    private save(){if(!this.session)return;this.saved.index=this.index;this.saved.sound=this.sound;this.saved.attempts=this.saved.attempts||{};this.saved.attempts[this.session.level.id]=this.session.snapshot();try{sys.localStorage.setItem(STORAGE_KEY,JSON.stringify(this.saved));}catch{this.message('本次进度暂时无法保存');}}
     private message(s:string){this.toast=s;this.toastTime=3;if(this.toastLabel)this.toastLabel.string=s;}
     private useHint(){if(this.busy||this.session.status!=='playing')return;if(this.session.hintUsed){this.message('本局提示已使用，试着放大观察');return;}const a=this.session.level.arrows.find(a=>canExit(a,this.session.level,this.session.removed));if(!a){this.message('关卡状态异常，请重新挑战');return;}this.session.hintUsed=true;this.hint=a.id;this.save();this.draw();this.message('光圈里的箭头，可以自由离开');}
     private tap(p:Point){if(this.busy||this.modal||this.session.status!=='playing')return;const local={x:(p.x-this.pan.x)/this.scale/this.pitch+(this.session.level.width-1)/2,y:(p.y-this.by-this.pan.y)/this.scale/this.pitch+(this.session.level.height-1)/2};
