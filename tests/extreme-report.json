@@ -1,0 +1,23 @@
+{
+  "level": 3,
+  "id": "generated-v2-3-contour-v4",
+  "arrows": 74,
+  "minSegments": 1,
+  "maxSegments": 35,
+  "directions": [
+    22,
+    11,
+    25,
+    16
+  ],
+  "minTurns": 0,
+  "meanTurns": 2.0945945945945947,
+  "initialChoices": 2,
+  "maxChoices": 2,
+  "minChoices": 1,
+  "verifiedStates": 250,
+  "occupiedCells": 1340,
+  "contourCoverage": 0.9911242603550295,
+  "signature": "8d49cf7e",
+  "elapsedMs": 1636
+}

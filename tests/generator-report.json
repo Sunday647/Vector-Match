@@ -1,0 +1,2291 @@
+{
+  "count": 120,
+  "duplicateCount": 0,
+  "p95ms": 1096,
+  "minCoverage": 0.967741935483871,
+  "maxCoverage": 1,
+  "maxRecentSilhouetteSimilarity": 0.8062283737024222,
+  "maxRecentRenderedSimilarity": 0.7666174298375185,
+  "rows": [
+    {
+      "level": 1,
+      "arrows": 59,
+      "coverage": 1,
+      "initialExits": 2,
+      "maxSolutionChoices": 3,
+      "chainLimit": 10,
+      "directions": [
+        16,
+        15,
+        9,
+        19
+      ],
+      "signature": "80bf7a7d",
+      "ms": 353,
+      "name": "蓬蓬云",
+      "silhouetteSimilarity": 0,
+      "renderedSimilarity": 0
+    },
+    {
+      "level": 2,
+      "arrows": 69,
+      "coverage": 1,
+      "initialExits": 1,
+      "maxSolutionChoices": 4,
+      "chainLimit": 8,
+      "directions": [
+        24,
+        17,
+        18,
+        10
+      ],
+      "signature": "5bee95ec",
+      "ms": 485,
+      "name": "坐着的小猫",
+      "silhouetteSimilarity": 0.4854368932038835,
+      "renderedSimilarity": 0.4968944099378882
+    },
+    {
+      "level": 3,
+      "arrows": 74,
+      "coverage": 0.9911242603550295,
+      "initialExits": 2,
+      "maxSolutionChoices": 2,
+      "chainLimit": 2,
+      "directions": [
+        22,
+        11,
+        25,
+        16
+      ],
+      "signature": "8d49cf7e",
+      "ms": 890,
+      "name": "一颗爱心",
+      "silhouetteSimilarity": 0.5511921458625526,
+      "renderedSimilarity": 0.5865921787709497
+    },
+    {
+      "level": 4,
+      "arrows": 56,
+      "coverage": 0.9977272727272727,
+      "initialExits": 2,
+      "maxSolutionChoices": 3,
+      "chainLimit": 6,
+      "directions": [
+        10,
+        22,
+        12,
+        12
+      ],
+      "signature": "833b484f",
+      "ms": 333,
+      "name": "坐着的小兔",
+      "silhouetteSimilarity": 0.6488888888888888,
+      "renderedSimilarity": 0.6478260869565218
+    },
+    {
+      "level": 5,
+      "arrows": 43,
+      "coverage": 1,
+      "initialExits": 2,
+      "maxSolutionChoices": 4,
+      "chainLimit": 8,
+      "directions": [
+        13,
+        15,
+        5,
+        10
+      ],
+      "signature": "e5a78d24",
+      "ms": 287,
+      "name": "一朵小花",
+      "silhouetteSimilarity": 0.6055979643765903,
+      "renderedSimilarity": 0.5994694960212201
+    },
+    {
+      "level": 6,
+      "arrows": 58,
+      "coverage": 0.9935344827586207,
+      "initialExits": 1,
+      "maxSolutionChoices": 2,
+      "chainLimit": 4,
+      "directions": [
+        13,
+        20,
+        13,
+        12
+      ],
+      "signature": "39df7a8b",
+      "ms": 444,
+      "name": "坐着的小狗",
+      "silhouetteSimilarity": 0.6887905604719764,
+      "renderedSimilarity": 0.7375478927203065
+    },
+    {
+      "level": 7,
+      "arrows": 74,
+      "coverage": 1,
+      "initialExits": 2,
+      "maxSolutionChoices": 3,
+      "chainLimit": 6,
+      "directions": [
+        13,
+        17,
+        20,
+        24
+      ],
+      "signature": "dbb19474",
+      "ms": 581,
+      "name": "小云下雨",
+      "silhouetteSimilarity": 0.5655172413793104,
+      "renderedSimilarity": 0.5871121718377088
+    },
+    {
+      "level": 8,
+      "arrows": 57,
+      "coverage": 1,
+      "initialExits": 2,
+      "maxSolutionChoices": 3,
+      "chainLimit": 8,
+      "directions": [
+        12,
+        13,
+        11,
+        21
+      ],
+      "signature": "f7aa3d48",
+      "ms": 394,
+      "name": "伸懒腰小猫",
+      "silhouetteSimilarity": 0.4810126582278481,
+      "renderedSimilarity": 0.45606060606060606
+    },
+    {
+      "level": 9,
+      "arrows": 63,
+      "coverage": 0.9961832061068703,
+      "initialExits": 1,
+      "maxSolutionChoices": 3,
+      "chainLimit": 4,
+      "directions": [
+        15,
+        23,
+        16,
+        9
+      ],
+      "signature": "6fe405b0",
+      "ms": 589,
+      "name": "两颗心靠近",
+      "silhouetteSimilarity": 0.6174785100286533,
+      "renderedSimilarity": 0.6269727403156384
+    },
+    {
+      "level": 10,
+      "arrows": 52,
+      "coverage": 1,
+      "initialExits": 1,
+      "maxSolutionChoices": 3,
+      "chainLimit": 6,
+      "directions": [
+        12,
+        11,
+        10,
+        19
+      ],
+      "signature": "1d8fe6ea",
+      "ms": 495,
+      "name": "跃起的小兔",
+      "silhouetteSimilarity": 0.5215311004784688,
+      "renderedSimilarity": 0.531055900621118
+    },
+    {
+      "level": 11,
+      "arrows": 50,
+      "coverage": 1,
+      "initialExits": 2,
+      "maxSolutionChoices": 2,
+      "chainLimit": 8,
+      "directions": [
+        11,
+        10,
+        16,
+        13
+      ],
+      "signature": "0f1d0a7d",
+      "ms": 324,
+      "name": "郁金香",
+      "silhouetteSimilarity": 0.6648936170212766,
+      "renderedSimilarity": 0.6143790849673203
+    },
+    {
+      "level": 12,
+      "arrows": 49,
+      "coverage": 0.9896907216494846,
+      "initialExits": 4,
+      "maxSolutionChoices": 4,
+      "chainLimit": 4,
+      "directions": [
+        5,
+        10,
+        16,
+        18
+      ],
+      "signature": "3a2ff003",
+      "ms": 534,
+      "name": "散步的小狗",
+      "silhouetteSimilarity": 0.5071090047393365,
+      "renderedSimilarity": 0.5126676602086438
+    },
+    {
+      "level": 13,
+      "arrows": 49,
+      "coverage": 1,
+      "initialExits": 2,
+      "maxSolutionChoices": 2,
+      "chainLimit": 6,
+      "directions": [
+        9,
+        14,
+        12,
+        14
+      ],
+      "signature": "bc33e606",
+      "ms": 403,
+      "name": "月亮枕着云",
+      "silhouetteSimilarity": 0.546112115732369,
+      "renderedSimilarity": 0.5073260073260073
+    },
+    {
+      "level": 14,
+      "arrows": 69,
+      "coverage": 1,
+      "initialExits": 2,
+      "maxSolutionChoices": 5,
+      "chainLimit": 8,
+      "directions": [
+        10,
+        13,
+        13,
+        33
+      ],
+      "signature": "34933d4a",
+      "ms": 511,
+      "name": "猫咪探头",
+      "silhouetteSimilarity": 0.6533523537803139,
+      "renderedSimilarity": 0.6680161943319838
+    },
+    {
+      "level": 15,
+      "arrows": 57,
+      "coverage": 0.9955357142857143,
+      "initialExits": 4,
+      "maxSolutionChoices": 4,
+      "chainLimit": 4,
+      "directions": [
+        9,
+        6,
+        17,
+        25
+      ],
+      "signature": "02c1f10f",
+      "ms": 409,
+      "name": "长翅膀的心",
+      "silhouetteSimilarity": 0.6423611111111112,
+      "renderedSimilarity": 0.6195652173913043
+    },
+    {
+      "level": 16,
+      "arrows": 50,
+      "coverage": 0.9972222222222222,
+      "initialExits": 1,
+      "maxSolutionChoices": 3,
+      "chainLimit": 6,
+      "directions": [
+        21,
+        15,
+        7,
+        7
+      ],
+      "signature": "52cd6d0d",
+      "ms": 298,
+      "name": "兔兔探头",
+      "silhouetteSimilarity": 0.7134146341463414,
+      "renderedSimilarity": 0.6786389413988658
+    },
+    {
+      "level": 17,
+      "arrows": 106,
+      "coverage": 0.9986559139784946,
+      "initialExits": 2,
+      "maxSolutionChoices": 3,
+      "chainLimit": 8,
+      "directions": [
+        27,
+        23,
+        35,
+        21
+      ],
+      "signature": "3d401788",
+      "ms": 1233,
+      "name": "花朵盛开",
+      "silhouetteSimilarity": 0.75,
+      "renderedSimilarity": 0.7403462050599201
+    },
+    {
+      "level": 18,
+      "arrows": 76,
+      "coverage": 0.9982638888888888,
+      "initialExits": 2,
+      "maxSolutionChoices": 4,
+      "chainLimit": 4,
+      "directions": [
+        19,
+        15,
+        21,
+        21
+      ],
+      "signature": "aa52afde",
+      "ms": 674,
+      "name": "小狗的家",
+      "silhouetteSimilarity": 0.6729475100942126,
+      "renderedSimilarity": 0.7099447513812155
+    },
+    {
+      "level": 19,
+      "arrows": 77,
+      "coverage": 0.9945652173913043,
+      "initialExits": 3,
+      "maxSolutionChoices": 3,
+      "chainLimit": 6,
+      "directions": [
+        22,
+        23,
+        13,
+        19
+      ],
+      "signature": "5c81cac7",
+      "ms": 670,
+      "name": "云朵叠叠乐",
+      "silhouetteSimilarity": 0.6993243243243243,
+      "renderedSimilarity": 0.700381679389313
+    },
+    {
+      "level": 20,
+      "arrows": 48,
+      "coverage": 1,
+      "initialExits": 1,
+      "maxSolutionChoices": 4,
+      "chainLimit": 8,
+      "directions": [
+        9,
+        13,
+        15,
+        11
+      ],
+      "signature": "26f76f7f",
+      "ms": 409,
+      "name": "散步的小猫",
+      "silhouetteSimilarity": 0.6501079913606912,
+      "renderedSimilarity": 0.6042105263157894
+    },
+    {
+      "level": 21,
+      "arrows": 46,
+      "coverage": 1,
+      "initialExits": 3,
+      "maxSolutionChoices": 3,
+      "chainLimit": 4,
+      "directions": [
+        15,
+        11,
+        8,
+        12
+      ],
+      "signature": "cf12ff3e",
+      "ms": 368,
+      "name": "爱心气球",
+      "silhouetteSimilarity": 0.6544943820224719,
+      "renderedSimilarity": 0.6208791208791209
+    },
+    {
+      "level": 22,
+      "arrows": 58,
+      "coverage": 0.9957627118644068,
+      "initialExits": 4,
+      "maxSolutionChoices": 4,
+      "chainLimit": 6,
+      "directions": [
+        13,
+        15,
+        10,
+        20
+      ],
+      "signature": "fd7fe0a6",
+      "ms": 569,
+      "name": "垂耳小兔",
+      "silhouetteSimilarity": 0.7522255192878339,
+      "renderedSimilarity": 0.7617728531855956
+    },
+    {
+      "level": 23,
+      "arrows": 74,
+      "coverage": 1,
+      "initialExits": 2,
+      "maxSolutionChoices": 5,
+      "chainLimit": 8,
+      "directions": [
+        25,
+        23,
+        18,
+        8
+      ],
+      "signature": "365fe864",
+      "ms": 626,
+      "name": "三朵小花",
+      "silhouetteSimilarity": 0.6055194805194806,
+      "renderedSimilarity": 0.6409836065573771
+    },
+    {
+      "level": 24,
+      "arrows": 47,
+      "coverage": 1,
+      "initialExits": 2,
+      "maxSolutionChoices": 3,
+      "chainLimit": 4,
+      "directions": [
+        14,
+        6,
+        16,
+        11
+      ],
+      "signature": "b22db789",
+      "ms": 398,
+      "name": "伸懒腰小狗",
+      "silhouetteSimilarity": 0.6086142322097379,
+      "renderedSimilarity": 0.5580524344569289
+    },
+    {
+      "level": 25,
+      "arrows": 49,
+      "coverage": 1,
+      "initialExits": 2,
+      "maxSolutionChoices": 3,
+      "chainLimit": 6,
+      "directions": [
+        7,
+        7,
+        24,
+        11
+      ],
+      "signature": "bdc64dce",
+      "ms": 397,
+      "name": "风吹流云",
+      "silhouetteSimilarity": 0.6081081081081081,
+      "renderedSimilarity": 0.630057803468208
+    },
+    {
+      "level": 26,
+      "arrows": 61,
+      "coverage": 1,
+      "initialExits": 3,
+      "maxSolutionChoices": 4,
+      "chainLimit": 8,
+      "directions": [
+        16,
+        22,
+        9,
+        14
+      ],
+      "signature": "3c420db6",
+      "ms": 498,
+      "name": "团成球的小猫",
+      "silhouetteSimilarity": 0.6532593619972261,
+      "renderedSimilarity": 0.6715425531914894
+    },
+    {
+      "level": 27,
+      "arrows": 70,
+      "coverage": 0.99609375,
+      "initialExits": 3,
+      "maxSolutionChoices": 4,
+      "chainLimit": 4,
+      "directions": [
+        13,
+        19,
+        14,
+        24
+      ],
+      "signature": "7eaf353c",
+      "ms": 529,
+      "name": "心意礼物",
+      "silhouetteSimilarity": 0.7296037296037297,
+      "renderedSimilarity": 0.7350597609561753
+    },
+    {
+      "level": 28,
+      "arrows": 61,
+      "coverage": 1,
+      "initialExits": 1,
+      "maxSolutionChoices": 3,
+      "chainLimit": 6,
+      "directions": [
+        14,
+        14,
+        9,
+        24
+      ],
+      "signature": "16e71153",
+      "ms": 415,
+      "name": "月亮上的兔",
+      "silhouetteSimilarity": 0.6270903010033445,
+      "renderedSimilarity": 0.5887096774193549
+    },
+    {
+      "level": 29,
+      "arrows": 62,
+      "coverage": 1,
+      "initialExits": 2,
+      "maxSolutionChoices": 3,
+      "chainLimit": 8,
+      "directions": [
+        19,
+        22,
+        9,
+        12
+      ],
+      "signature": "c601f3dd",
+      "ms": 590,
+      "name": "窗台盆花",
+      "silhouetteSimilarity": 0.7158273381294964,
+      "renderedSimilarity": 0.7588357588357588
+    },
+    {
+      "level": 30,
+      "arrows": 38,
+      "coverage": 0.993421052631579,
+      "initialExits": 1,
+      "maxSolutionChoices": 2,
+      "chainLimit": 4,
+      "directions": [
+        9,
+        12,
+        6,
+        11
+      ],
+      "signature": "2cd1cb42",
+      "ms": 234,
+      "name": "蜷睡的小狗",
+      "silhouetteSimilarity": 0.5260869565217391,
+      "renderedSimilarity": 0.6465324384787472
+    },
+    {
+      "level": 31,
+      "arrows": 61,
+      "coverage": 0.993421052631579,
+      "initialExits": 1,
+      "maxSolutionChoices": 3,
+      "chainLimit": 6,
+      "directions": [
+        21,
+        16,
+        14,
+        10
+      ],
+      "signature": "29d623f5",
+      "ms": 508,
+      "name": "彩虹与云",
+      "silhouetteSimilarity": 0.5707006369426751,
+      "renderedSimilarity": 0.5774834437086093
+    },
+    {
+      "level": 32,
+      "arrows": 50,
+      "coverage": 1,
+      "initialExits": 2,
+      "maxSolutionChoices": 2,
+      "chainLimit": 8,
+      "directions": [
+        10,
+        12,
+        11,
+        17
+      ],
+      "signature": "77cb1717",
+      "ms": 399,
+      "name": "小猫摘星",
+      "silhouetteSimilarity": 0.5912162162162162,
+      "renderedSimilarity": 0.600924499229584
+    },
+    {
+      "level": 33,
+      "arrows": 49,
+      "coverage": 0.9947368421052631,
+      "initialExits": 2,
+      "maxSolutionChoices": 2,
+      "chainLimit": 4,
+      "directions": [
+        11,
+        13,
+        14,
+        11
+      ],
+      "signature": "cf212982",
+      "ms": 335,
+      "name": "爱心发芽",
+      "silhouetteSimilarity": 0.7115384615384616,
+      "renderedSimilarity": 0.676923076923077
+    },
+    {
+      "level": 34,
+      "arrows": 62,
+      "coverage": 1,
+      "initialExits": 1,
+      "maxSolutionChoices": 2,
+      "chainLimit": 6,
+      "directions": [
+        15,
+        17,
+        16,
+        14
+      ],
+      "signature": "df2d6b6c",
+      "ms": 424,
+      "name": "小兔抱萝卜",
+      "silhouetteSimilarity": 0.5871559633027523,
+      "renderedSimilarity": 0.5994194484760522
+    },
+    {
+      "level": 35,
+      "arrows": 47,
+      "coverage": 1,
+      "initialExits": 3,
+      "maxSolutionChoices": 4,
+      "chainLimit": 8,
+      "directions": [
+        15,
+        9,
+        7,
+        16
+      ],
+      "signature": "ea4b7c97",
+      "ms": 404,
+      "name": "花开枝头",
+      "silhouetteSimilarity": 0.5555555555555556,
+      "renderedSimilarity": 0.5733855185909981
+    },
+    {
+      "level": 36,
+      "arrows": 35,
+      "coverage": 0.9929577464788732,
+      "initialExits": 1,
+      "maxSolutionChoices": 2,
+      "chainLimit": 4,
+      "directions": [
+        10,
+        8,
+        11,
+        6
+      ],
+      "signature": "ee251376",
+      "ms": 207,
+      "name": "蜷睡的小狗",
+      "silhouetteSimilarity": 0.7478753541076487,
+      "renderedSimilarity": 0.68
+    },
+    {
+      "level": 37,
+      "arrows": 61,
+      "coverage": 0.9963235294117647,
+      "initialExits": 1,
+      "maxSolutionChoices": 2,
+      "chainLimit": 6,
+      "directions": [
+        12,
+        15,
+        13,
+        21
+      ],
+      "signature": "18bfb71a",
+      "ms": 592,
+      "name": "小云下雨",
+      "silhouetteSimilarity": 0.5740365111561866,
+      "renderedSimilarity": 0.5987780040733197
+    },
+    {
+      "level": 38,
+      "arrows": 48,
+      "coverage": 1,
+      "initialExits": 2,
+      "maxSolutionChoices": 3,
+      "chainLimit": 8,
+      "directions": [
+        14,
+        15,
+        13,
+        6
+      ],
+      "signature": "56c6cd37",
+      "ms": 428,
+      "name": "伸懒腰小猫",
+      "silhouetteSimilarity": 0.46888567293777134,
+      "renderedSimilarity": 0.4905933429811867
+    },
+    {
+      "level": 39,
+      "arrows": 71,
+      "coverage": 0.9858156028368794,
+      "initialExits": 2,
+      "maxSolutionChoices": 2,
+      "chainLimit": 4,
+      "directions": [
+        20,
+        14,
+        15,
+        22
+      ],
+      "signature": "9ee62794",
+      "ms": 781,
+      "name": "两颗心靠近",
+      "silhouetteSimilarity": 0.5944233206590621,
+      "renderedSimilarity": 0.5991902834008097
+    },
+    {
+      "level": 40,
+      "arrows": 60,
+      "coverage": 1,
+      "initialExits": 1,
+      "maxSolutionChoices": 3,
+      "chainLimit": 6,
+      "directions": [
+        19,
+        18,
+        10,
+        13
+      ],
+      "signature": "feba10c2",
+      "ms": 444,
+      "name": "跃起的小兔",
+      "silhouetteSimilarity": 0.6133333333333333,
+      "renderedSimilarity": 0.5543071161048689
+    },
+    {
+      "level": 41,
+      "arrows": 47,
+      "coverage": 1,
+      "initialExits": 2,
+      "maxSolutionChoices": 3,
+      "chainLimit": 8,
+      "directions": [
+        11,
+        16,
+        8,
+        12
+      ],
+      "signature": "b5bed9da",
+      "ms": 1878,
+      "name": "郁金香",
+      "silhouetteSimilarity": 0.625,
+      "renderedSimilarity": 0.621676891615542
+    },
+    {
+      "level": 42,
+      "arrows": 45,
+      "coverage": 0.9973684210526316,
+      "initialExits": 2,
+      "maxSolutionChoices": 3,
+      "chainLimit": 4,
+      "directions": [
+        7,
+        15,
+        13,
+        10
+      ],
+      "signature": "7d1c7b85",
+      "ms": 427,
+      "name": "散步的小狗",
+      "silhouetteSimilarity": 0.6456521739130435,
+      "renderedSimilarity": 0.5459662288930581
+    },
+    {
+      "level": 43,
+      "arrows": 56,
+      "coverage": 0.9922680412371134,
+      "initialExits": 2,
+      "maxSolutionChoices": 4,
+      "chainLimit": 6,
+      "directions": [
+        18,
+        5,
+        13,
+        20
+      ],
+      "signature": "3c811cb9",
+      "ms": 526,
+      "name": "月亮枕着云",
+      "silhouetteSimilarity": 0.5991983967935872,
+      "renderedSimilarity": 0.5853174603174603
+    },
+    {
+      "level": 44,
+      "arrows": 75,
+      "coverage": 1,
+      "initialExits": 2,
+      "maxSolutionChoices": 3,
+      "chainLimit": 8,
+      "directions": [
+        10,
+        24,
+        17,
+        24
+      ],
+      "signature": "1c31ca4f",
+      "ms": 500,
+      "name": "猫咪探头",
+      "silhouetteSimilarity": 0.6718092566619915,
+      "renderedSimilarity": 0.673469387755102
+    },
+    {
+      "level": 45,
+      "arrows": 64,
+      "coverage": 0.9954128440366973,
+      "initialExits": 3,
+      "maxSolutionChoices": 3,
+      "chainLimit": 4,
+      "directions": [
+        7,
+        15,
+        11,
+        31
+      ],
+      "signature": "aa145c6d",
+      "ms": 424,
+      "name": "长翅膀的心",
+      "silhouetteSimilarity": 0.6781857451403888,
+      "renderedSimilarity": 0.6800947867298578
+    },
+    {
+      "level": 46,
+      "arrows": 45,
+      "coverage": 1,
+      "initialExits": 2,
+      "maxSolutionChoices": 3,
+      "chainLimit": 6,
+      "directions": [
+        11,
+        11,
+        16,
+        7
+      ],
+      "signature": "f46064ee",
+      "ms": 274,
+      "name": "兔兔探头",
+      "silhouetteSimilarity": 0.6926229508196722,
+      "renderedSimilarity": 0.7330677290836654
+    },
+    {
+      "level": 47,
+      "arrows": 88,
+      "coverage": 0.9986772486772487,
+      "initialExits": 1,
+      "maxSolutionChoices": 3,
+      "chainLimit": 8,
+      "directions": [
+        11,
+        18,
+        37,
+        22
+      ],
+      "signature": "b7fb4a81",
+      "ms": 927,
+      "name": "花朵盛开",
+      "silhouetteSimilarity": 0.7450722733245729,
+      "renderedSimilarity": 0.7209612817089452
+    },
+    {
+      "level": 48,
+      "arrows": 65,
+      "coverage": 0.9892086330935251,
+      "initialExits": 2,
+      "maxSolutionChoices": 3,
+      "chainLimit": 4,
+      "directions": [
+        19,
+        10,
+        19,
+        17
+      ],
+      "signature": "08e9be99",
+      "ms": 817,
+      "name": "狗狗探头",
+      "silhouetteSimilarity": 0.7545691906005222,
+      "renderedSimilarity": 0.7118402282453637
+    },
+    {
+      "level": 49,
+      "arrows": 76,
+      "coverage": 1,
+      "initialExits": 2,
+      "maxSolutionChoices": 3,
+      "chainLimit": 6,
+      "directions": [
+        28,
+        19,
+        11,
+        18
+      ],
+      "signature": "f6a96055",
+      "ms": 660,
+      "name": "云朵叠叠乐",
+      "silhouetteSimilarity": 0.6015037593984962,
+      "renderedSimilarity": 0.6363636363636364
+    },
+    {
+      "level": 50,
+      "arrows": 50,
+      "coverage": 0.9973404255319149,
+      "initialExits": 2,
+      "maxSolutionChoices": 5,
+      "chainLimit": 8,
+      "directions": [
+        10,
+        10,
+        11,
+        19
+      ],
+      "signature": "1f8ed5df",
+      "ms": 458,
+      "name": "散步的小猫",
+      "silhouetteSimilarity": 0.6377440347071583,
+      "renderedSimilarity": 0.5894308943089431
+    },
+    {
+      "level": 51,
+      "arrows": 51,
+      "coverage": 0.9942528735632183,
+      "initialExits": 3,
+      "maxSolutionChoices": 4,
+      "chainLimit": 4,
+      "directions": [
+        14,
+        10,
+        13,
+        14
+      ],
+      "signature": "adc19eca",
+      "ms": 347,
+      "name": "爱心气球",
+      "silhouetteSimilarity": 0.7087912087912088,
+      "renderedSimilarity": 0.6372549019607843
+    },
+    {
+      "level": 52,
+      "arrows": 76,
+      "coverage": 1,
+      "initialExits": 2,
+      "maxSolutionChoices": 3,
+      "chainLimit": 6,
+      "directions": [
+        19,
+        11,
+        24,
+        22
+      ],
+      "signature": "b8aee713",
+      "ms": 538,
+      "name": "垂耳小兔",
+      "silhouetteSimilarity": 0.7293333333333333,
+      "renderedSimilarity": 0.664804469273743
+    },
+    {
+      "level": 53,
+      "arrows": 62,
+      "coverage": 1,
+      "initialExits": 2,
+      "maxSolutionChoices": 3,
+      "chainLimit": 8,
+      "directions": [
+        20,
+        17,
+        13,
+        12
+      ],
+      "signature": "6d0e9e31",
+      "ms": 540,
+      "name": "三朵小花",
+      "silhouetteSimilarity": 0.5748031496062992,
+      "renderedSimilarity": 0.6428571428571429
+    },
+    {
+      "level": 54,
+      "arrows": 73,
+      "coverage": 0.9965753424657534,
+      "initialExits": 2,
+      "maxSolutionChoices": 2,
+      "chainLimit": 4,
+      "directions": [
+        22,
+        20,
+        24,
+        7
+      ],
+      "signature": "58b4a93f",
+      "ms": 567,
+      "name": "小狗的家",
+      "silhouetteSimilarity": 0.7377963737796374,
+      "renderedSimilarity": 0.7557142857142857
+    },
+    {
+      "level": 55,
+      "arrows": 58,
+      "coverage": 1,
+      "initialExits": 1,
+      "maxSolutionChoices": 4,
+      "chainLimit": 6,
+      "directions": [
+        13,
+        7,
+        22,
+        16
+      ],
+      "signature": "d2398477",
+      "ms": 430,
+      "name": "风吹流云",
+      "silhouetteSimilarity": 0.5902255639097744,
+      "renderedSimilarity": 0.6409774436090225
+    },
+    {
+      "level": 56,
+      "arrows": 65,
+      "coverage": 1,
+      "initialExits": 2,
+      "maxSolutionChoices": 3,
+      "chainLimit": 8,
+      "directions": [
+        12,
+        12,
+        26,
+        15
+      ],
+      "signature": "02e55007",
+      "ms": 475,
+      "name": "团成球的小猫",
+      "silhouetteSimilarity": 0.7025862068965517,
+      "renderedSimilarity": 0.6773743016759777
+    },
+    {
+      "level": 57,
+      "arrows": 62,
+      "coverage": 0.9865384615384616,
+      "initialExits": 3,
+      "maxSolutionChoices": 3,
+      "chainLimit": 4,
+      "directions": [
+        19,
+        20,
+        11,
+        12
+      ],
+      "signature": "2f8acd78",
+      "ms": 604,
+      "name": "心意礼物",
+      "silhouetteSimilarity": 0.6818181818181818,
+      "renderedSimilarity": 0.6872509960159362
+    },
+    {
+      "level": 58,
+      "arrows": 52,
+      "coverage": 0.995049504950495,
+      "initialExits": 1,
+      "maxSolutionChoices": 3,
+      "chainLimit": 6,
+      "directions": [
+        18,
+        11,
+        10,
+        13
+      ],
+      "signature": "d92dd81d",
+      "ms": 445,
+      "name": "月亮上的兔",
+      "silhouetteSimilarity": 0.6422487223168655,
+      "renderedSimilarity": 0.6201298701298701
+    },
+    {
+      "level": 59,
+      "arrows": 61,
+      "coverage": 1,
+      "initialExits": 1,
+      "maxSolutionChoices": 3,
+      "chainLimit": 8,
+      "directions": [
+        14,
+        28,
+        9,
+        10
+      ],
+      "signature": "7af3223c",
+      "ms": 435,
+      "name": "窗台盆花",
+      "silhouetteSimilarity": 0.7134020618556701,
+      "renderedSimilarity": 0.7359307359307359
+    },
+    {
+      "level": 60,
+      "arrows": 44,
+      "coverage": 0.9848484848484849,
+      "initialExits": 2,
+      "maxSolutionChoices": 2,
+      "chainLimit": 4,
+      "directions": [
+        4,
+        6,
+        25,
+        9
+      ],
+      "signature": "1d47464c",
+      "ms": 368,
+      "name": "伸懒腰小狗",
+      "silhouetteSimilarity": 0.611969111969112,
+      "renderedSimilarity": 0.5851449275362319
+    },
+    {
+      "level": 61,
+      "arrows": 59,
+      "coverage": 0.9977272727272727,
+      "initialExits": 2,
+      "maxSolutionChoices": 3,
+      "chainLimit": 6,
+      "directions": [
+        16,
+        10,
+        15,
+        18
+      ],
+      "signature": "977f673b",
+      "ms": 479,
+      "name": "彩虹与云",
+      "silhouetteSimilarity": 0.5369393139841688,
+      "renderedSimilarity": 0.5317220543806647
+    },
+    {
+      "level": 62,
+      "arrows": 54,
+      "coverage": 1,
+      "initialExits": 2,
+      "maxSolutionChoices": 2,
+      "chainLimit": 8,
+      "directions": [
+        16,
+        10,
+        17,
+        11
+      ],
+      "signature": "d6af5c39",
+      "ms": 409,
+      "name": "小猫摘星",
+      "silhouetteSimilarity": 0.6217008797653959,
+      "renderedSimilarity": 0.5869191049913941
+    },
+    {
+      "level": 63,
+      "arrows": 47,
+      "coverage": 0.9974226804123711,
+      "initialExits": 1,
+      "maxSolutionChoices": 3,
+      "chainLimit": 4,
+      "directions": [
+        18,
+        9,
+        11,
+        9
+      ],
+      "signature": "92660f44",
+      "ms": 378,
+      "name": "爱心发芽",
+      "silhouetteSimilarity": 0.7060439560439561,
+      "renderedSimilarity": 0.6711711711711712
+    },
+    {
+      "level": 64,
+      "arrows": 61,
+      "coverage": 0.995575221238938,
+      "initialExits": 2,
+      "maxSolutionChoices": 4,
+      "chainLimit": 6,
+      "directions": [
+        21,
+        15,
+        14,
+        11
+      ],
+      "signature": "6b186cec",
+      "ms": 461,
+      "name": "小兔抱萝卜",
+      "silhouetteSimilarity": 0.6082036775106082,
+      "renderedSimilarity": 0.5714285714285714
+    },
+    {
+      "level": 65,
+      "arrows": 50,
+      "coverage": 1,
+      "initialExits": 1,
+      "maxSolutionChoices": 2,
+      "chainLimit": 8,
+      "directions": [
+        18,
+        14,
+        12,
+        6
+      ],
+      "signature": "a60094c4",
+      "ms": 378,
+      "name": "花开枝头",
+      "silhouetteSimilarity": 0.5146198830409356,
+      "renderedSimilarity": 0.5265151515151515
+    },
+    {
+      "level": 66,
+      "arrows": 38,
+      "coverage": 1,
+      "initialExits": 1,
+      "maxSolutionChoices": 2,
+      "chainLimit": 4,
+      "directions": [
+        5,
+        8,
+        8,
+        17
+      ],
+      "signature": "8a4abcf6",
+      "ms": 189,
+      "name": "蜷睡的小狗",
+      "silhouetteSimilarity": 0.6842105263157895,
+      "renderedSimilarity": 0.6425531914893617
+    },
+    {
+      "level": 67,
+      "arrows": 58,
+      "coverage": 1,
+      "initialExits": 2,
+      "maxSolutionChoices": 3,
+      "chainLimit": 6,
+      "directions": [
+        12,
+        16,
+        9,
+        21
+      ],
+      "signature": "e3d95352",
+      "ms": 405,
+      "name": "蓬蓬云",
+      "silhouetteSimilarity": 0.7248520710059172,
+      "renderedSimilarity": 0.743455497382199
+    },
+    {
+      "level": 68,
+      "arrows": 75,
+      "coverage": 1,
+      "initialExits": 2,
+      "maxSolutionChoices": 3,
+      "chainLimit": 8,
+      "directions": [
+        11,
+        18,
+        31,
+        15
+      ],
+      "signature": "447e7337",
+      "ms": 489,
+      "name": "坐着的小猫",
+      "silhouetteSimilarity": 0.7368421052631579,
+      "renderedSimilarity": 0.7046728971962617
+    },
+    {
+      "level": 69,
+      "arrows": 73,
+      "coverage": 0.9937888198757764,
+      "initialExits": 2,
+      "maxSolutionChoices": 2,
+      "chainLimit": 4,
+      "directions": [
+        25,
+        13,
+        27,
+        8
+      ],
+      "signature": "fec7a5b9",
+      "ms": 741,
+      "name": "一颗爱心",
+      "silhouetteSimilarity": 0.7312588401697313,
+      "renderedSimilarity": 0.72782874617737
+    },
+    {
+      "level": 70,
+      "arrows": 49,
+      "coverage": 0.9974489795918368,
+      "initialExits": 3,
+      "maxSolutionChoices": 3,
+      "chainLimit": 6,
+      "directions": [
+        6,
+        20,
+        15,
+        8
+      ],
+      "signature": "014b4828",
+      "ms": 387,
+      "name": "坐着的小兔",
+      "silhouetteSimilarity": 0.6861826697892272,
+      "renderedSimilarity": 0.7142857142857143
+    },
+    {
+      "level": 71,
+      "arrows": 45,
+      "coverage": 1,
+      "initialExits": 2,
+      "maxSolutionChoices": 3,
+      "chainLimit": 8,
+      "directions": [
+        18,
+        14,
+        6,
+        7
+      ],
+      "signature": "76b91112",
+      "ms": 326,
+      "name": "一朵小花",
+      "silhouetteSimilarity": 0.6851851851851852,
+      "renderedSimilarity": 0.6453900709219859
+    },
+    {
+      "level": 72,
+      "arrows": 61,
+      "coverage": 0.9956896551724138,
+      "initialExits": 2,
+      "maxSolutionChoices": 2,
+      "chainLimit": 4,
+      "directions": [
+        15,
+        12,
+        13,
+        21
+      ],
+      "signature": "cfd6ed13",
+      "ms": 466,
+      "name": "坐着的小狗",
+      "silhouetteSimilarity": 0.7515527950310559,
+      "renderedSimilarity": 0.7622641509433963
+    },
+    {
+      "level": 73,
+      "arrows": 56,
+      "coverage": 0.9976190476190476,
+      "initialExits": 3,
+      "maxSolutionChoices": 4,
+      "chainLimit": 6,
+      "directions": [
+        23,
+        10,
+        6,
+        17
+      ],
+      "signature": "ce9a23d1",
+      "ms": 523,
+      "name": "月亮枕着云",
+      "silhouetteSimilarity": 0.6400778210116731,
+      "renderedSimilarity": 0.5579150579150579
+    },
+    {
+      "level": 74,
+      "arrows": 65,
+      "coverage": 1,
+      "initialExits": 1,
+      "maxSolutionChoices": 4,
+      "chainLimit": 8,
+      "directions": [
+        12,
+        17,
+        20,
+        16
+      ],
+      "signature": "e7ab7a79",
+      "ms": 496,
+      "name": "猫咪探头",
+      "silhouetteSimilarity": 0.6798825256975036,
+      "renderedSimilarity": 0.6792189679218968
+    },
+    {
+      "level": 75,
+      "arrows": 52,
+      "coverage": 0.9807692307692307,
+      "initialExits": 2,
+      "maxSolutionChoices": 3,
+      "chainLimit": 4,
+      "directions": [
+        12,
+        12,
+        21,
+        7
+      ],
+      "signature": "a3ad6e3b",
+      "ms": 410,
+      "name": "长翅膀的心",
+      "silhouetteSimilarity": 0.6814159292035398,
+      "renderedSimilarity": 0.6330798479087453
+    },
+    {
+      "level": 76,
+      "arrows": 48,
+      "coverage": 1,
+      "initialExits": 1,
+      "maxSolutionChoices": 4,
+      "chainLimit": 6,
+      "directions": [
+        16,
+        10,
+        13,
+        9
+      ],
+      "signature": "a45d29cf",
+      "ms": 360,
+      "name": "兔兔探头",
+      "silhouetteSimilarity": 0.7340425531914894,
+      "renderedSimilarity": 0.7228915662650602
+    },
+    {
+      "level": 77,
+      "arrows": 88,
+      "coverage": 1,
+      "initialExits": 3,
+      "maxSolutionChoices": 3,
+      "chainLimit": 8,
+      "directions": [
+        18,
+        38,
+        15,
+        17
+      ],
+      "signature": "8af76448",
+      "ms": 1096,
+      "name": "花朵盛开",
+      "silhouetteSimilarity": 0.739803094233474,
+      "renderedSimilarity": 0.7666174298375185
+    },
+    {
+      "level": 78,
+      "arrows": 72,
+      "coverage": 1,
+      "initialExits": 3,
+      "maxSolutionChoices": 3,
+      "chainLimit": 4,
+      "directions": [
+        12,
+        24,
+        21,
+        15
+      ],
+      "signature": "a3037ec8",
+      "ms": 931,
+      "name": "狗狗探头",
+      "silhouetteSimilarity": 0.8062283737024222,
+      "renderedSimilarity": 0.7393526405451448
+    },
+    {
+      "level": 79,
+      "arrows": 74,
+      "coverage": 1,
+      "initialExits": 1,
+      "maxSolutionChoices": 3,
+      "chainLimit": 6,
+      "directions": [
+        13,
+        30,
+        15,
+        16
+      ],
+      "signature": "3c992f6f",
+      "ms": 690,
+      "name": "云朵叠叠乐",
+      "silhouetteSimilarity": 0.6760299625468165,
+      "renderedSimilarity": 0.7085714285714285
+    },
+    {
+      "level": 80,
+      "arrows": 47,
+      "coverage": 1,
+      "initialExits": 3,
+      "maxSolutionChoices": 3,
+      "chainLimit": 8,
+      "directions": [
+        11,
+        15,
+        10,
+        11
+      ],
+      "signature": "8dfecf24",
+      "ms": 401,
+      "name": "散步的小猫",
+      "silhouetteSimilarity": 0.47129909365558914,
+      "renderedSimilarity": 0.5124816446402349
+    },
+    {
+      "level": 81,
+      "arrows": 45,
+      "coverage": 0.9842105263157894,
+      "initialExits": 3,
+      "maxSolutionChoices": 3,
+      "chainLimit": 4,
+      "directions": [
+        9,
+        12,
+        15,
+        9
+      ],
+      "signature": "706bf445",
+      "ms": 1789,
+      "name": "爱心气球",
+      "silhouetteSimilarity": 0.7099447513812155,
+      "renderedSimilarity": 0.6531165311653117
+    },
+    {
+      "level": 82,
+      "arrows": 65,
+      "coverage": 0.9941860465116279,
+      "initialExits": 2,
+      "maxSolutionChoices": 4,
+      "chainLimit": 6,
+      "directions": [
+        15,
+        18,
+        8,
+        24
+      ],
+      "signature": "46934a62",
+      "ms": 601,
+      "name": "垂耳小兔",
+      "silhouetteSimilarity": 0.7739130434782608,
+      "renderedSimilarity": 0.7276853252647504
+    },
+    {
+      "level": 83,
+      "arrows": 57,
+      "coverage": 0.996,
+      "initialExits": 2,
+      "maxSolutionChoices": 4,
+      "chainLimit": 8,
+      "directions": [
+        12,
+        17,
+        16,
+        12
+      ],
+      "signature": "98e983fa",
+      "ms": 607,
+      "name": "三朵小花",
+      "silhouetteSimilarity": 0.6421725239616614,
+      "renderedSimilarity": 0.6292517006802721
+    },
+    {
+      "level": 84,
+      "arrows": 67,
+      "coverage": 0.9930555555555556,
+      "initialExits": 1,
+      "maxSolutionChoices": 2,
+      "chainLimit": 4,
+      "directions": [
+        11,
+        27,
+        16,
+        13
+      ],
+      "signature": "33fa24dc",
+      "ms": 971,
+      "name": "小狗的家",
+      "silhouetteSimilarity": 0.7252906976744186,
+      "renderedSimilarity": 0.7437407952871871
+    },
+    {
+      "level": 85,
+      "arrows": 58,
+      "coverage": 1,
+      "initialExits": 2,
+      "maxSolutionChoices": 2,
+      "chainLimit": 6,
+      "directions": [
+        14,
+        14,
+        17,
+        13
+      ],
+      "signature": "dbdcf4b6",
+      "ms": 635,
+      "name": "风吹流云",
+      "silhouetteSimilarity": 0.591337099811676,
+      "renderedSimilarity": 0.6206373292867982
+    },
+    {
+      "level": 86,
+      "arrows": 67,
+      "coverage": 0.9936974789915967,
+      "initialExits": 2,
+      "maxSolutionChoices": 5,
+      "chainLimit": 8,
+      "directions": [
+        12,
+        15,
+        13,
+        27
+      ],
+      "signature": "8807d855",
+      "ms": 452,
+      "name": "团成球的小猫",
+      "silhouetteSimilarity": 0.6940509915014165,
+      "renderedSimilarity": 0.6703146374829001
+    },
+    {
+      "level": 87,
+      "arrows": 65,
+      "coverage": 0.984375,
+      "initialExits": 2,
+      "maxSolutionChoices": 3,
+      "chainLimit": 4,
+      "directions": [
+        21,
+        13,
+        17,
+        14
+      ],
+      "signature": "b1d8572e",
+      "ms": 607,
+      "name": "心意礼物",
+      "silhouetteSimilarity": 0.6910229645093946,
+      "renderedSimilarity": 0.7131313131313132
+    },
+    {
+      "level": 88,
+      "arrows": 54,
+      "coverage": 0.9975,
+      "initialExits": 2,
+      "maxSolutionChoices": 3,
+      "chainLimit": 6,
+      "directions": [
+        9,
+        7,
+        10,
+        28
+      ],
+      "signature": "07d40d97",
+      "ms": 401,
+      "name": "月亮上的兔",
+      "silhouetteSimilarity": 0.6437699680511182,
+      "renderedSimilarity": 0.5996835443037974
+    },
+    {
+      "level": 89,
+      "arrows": 63,
+      "coverage": 1,
+      "initialExits": 3,
+      "maxSolutionChoices": 3,
+      "chainLimit": 8,
+      "directions": [
+        10,
+        13,
+        17,
+        23
+      ],
+      "signature": "d619754e",
+      "ms": 758,
+      "name": "窗台盆花",
+      "silhouetteSimilarity": 0.7424242424242424,
+      "renderedSimilarity": 0.7075892857142857
+    },
+    {
+      "level": 90,
+      "arrows": 48,
+      "coverage": 0.967741935483871,
+      "initialExits": 2,
+      "maxSolutionChoices": 2,
+      "chainLimit": 4,
+      "directions": [
+        9,
+        12,
+        13,
+        14
+      ],
+      "signature": "ef84f9ab",
+      "ms": 587,
+      "name": "伸懒腰小狗",
+      "silhouetteSimilarity": 0.5385878489326765,
+      "renderedSimilarity": 0.4968152866242038
+    },
+    {
+      "level": 91,
+      "arrows": 64,
+      "coverage": 0.991304347826087,
+      "initialExits": 1,
+      "maxSolutionChoices": 3,
+      "chainLimit": 6,
+      "directions": [
+        18,
+        12,
+        14,
+        20
+      ],
+      "signature": "ce159d4b",
+      "ms": 549,
+      "name": "彩虹与云",
+      "silhouetteSimilarity": 0.5653495440729484,
+      "renderedSimilarity": 0.5615384615384615
+    },
+    {
+      "level": 92,
+      "arrows": 62,
+      "coverage": 1,
+      "initialExits": 1,
+      "maxSolutionChoices": 3,
+      "chainLimit": 8,
+      "directions": [
+        19,
+        15,
+        15,
+        13
+      ],
+      "signature": "73ec2daf",
+      "ms": 468,
+      "name": "小猫摘星",
+      "silhouetteSimilarity": 0.6040515653775322,
+      "renderedSimilarity": 0.5966542750929368
+    },
+    {
+      "level": 93,
+      "arrows": 49,
+      "coverage": 0.9869791666666666,
+      "initialExits": 3,
+      "maxSolutionChoices": 3,
+      "chainLimit": 4,
+      "directions": [
+        9,
+        16,
+        9,
+        15
+      ],
+      "signature": "f9771836",
+      "ms": 396,
+      "name": "爱心发芽",
+      "silhouetteSimilarity": 0.6979405034324943,
+      "renderedSimilarity": 0.6558891454965358
+    },
+    {
+      "level": 94,
+      "arrows": 68,
+      "coverage": 1,
+      "initialExits": 3,
+      "maxSolutionChoices": 3,
+      "chainLimit": 6,
+      "directions": [
+        16,
+        30,
+        11,
+        11
+      ],
+      "signature": "663b4cf2",
+      "ms": 441,
+      "name": "小兔抱萝卜",
+      "silhouetteSimilarity": 0.5992647058823529,
+      "renderedSimilarity": 0.5689948892674617
+    },
+    {
+      "level": 95,
+      "arrows": 49,
+      "coverage": 1,
+      "initialExits": 3,
+      "maxSolutionChoices": 4,
+      "chainLimit": 8,
+      "directions": [
+        10,
+        14,
+        12,
+        13
+      ],
+      "signature": "5278c1c7",
+      "ms": 428,
+      "name": "花开枝头",
+      "silhouetteSimilarity": 0.5634615384615385,
+      "renderedSimilarity": 0.5291902071563088
+    },
+    {
+      "level": 96,
+      "arrows": 37,
+      "coverage": 1,
+      "initialExits": 2,
+      "maxSolutionChoices": 3,
+      "chainLimit": 4,
+      "directions": [
+        10,
+        11,
+        5,
+        11
+      ],
+      "signature": "9cc108b0",
+      "ms": 191,
+      "name": "蜷睡的小狗",
+      "silhouetteSimilarity": 0.6644591611479028,
+      "renderedSimilarity": 0.6367521367521367
+    },
+    {
+      "level": 97,
+      "arrows": 64,
+      "coverage": 1,
+      "initialExits": 2,
+      "maxSolutionChoices": 3,
+      "chainLimit": 6,
+      "directions": [
+        11,
+        16,
+        13,
+        24
+      ],
+      "signature": "198ef44f",
+      "ms": 580,
+      "name": "小云下雨",
+      "silhouetteSimilarity": 0.5742574257425742,
+      "renderedSimilarity": 0.5792811839323467
+    },
+    {
+      "level": 98,
+      "arrows": 70,
+      "coverage": 1,
+      "initialExits": 3,
+      "maxSolutionChoices": 4,
+      "chainLimit": 8,
+      "directions": [
+        21,
+        22,
+        10,
+        17
+      ],
+      "signature": "b58587ec",
+      "ms": 646,
+      "name": "坐着的小猫",
+      "silhouetteSimilarity": 0.754880694143167,
+      "renderedSimilarity": 0.707089552238806
+    },
+    {
+      "level": 99,
+      "arrows": 73,
+      "coverage": 0.9854838709677419,
+      "initialExits": 3,
+      "maxSolutionChoices": 3,
+      "chainLimit": 4,
+      "directions": [
+        11,
+        14,
+        24,
+        24
+      ],
+      "signature": "b5072ae8",
+      "ms": 847,
+      "name": "一颗爱心",
+      "silhouetteSimilarity": 0.7653061224489796,
+      "renderedSimilarity": 0.7315233785822021
+    },
+    {
+      "level": 100,
+      "arrows": 51,
+      "coverage": 1,
+      "initialExits": 1,
+      "maxSolutionChoices": 3,
+      "chainLimit": 6,
+      "directions": [
+        13,
+        9,
+        10,
+        19
+      ],
+      "signature": "299676c3",
+      "ms": 332,
+      "name": "坐着的小兔",
+      "silhouetteSimilarity": 0.7046004842615012,
+      "renderedSimilarity": 0.6567164179104478
+    },
+    {
+      "level": 101,
+      "arrows": 46,
+      "coverage": 1,
+      "initialExits": 1,
+      "maxSolutionChoices": 2,
+      "chainLimit": 8,
+      "directions": [
+        7,
+        17,
+        10,
+        12
+      ],
+      "signature": "58639edd",
+      "ms": 304,
+      "name": "一朵小花",
+      "silhouetteSimilarity": 0.6919060052219321,
+      "renderedSimilarity": 0.6963855421686747
+    },
+    {
+      "level": 102,
+      "arrows": 65,
+      "coverage": 0.9726890756302521,
+      "initialExits": 3,
+      "maxSolutionChoices": 4,
+      "chainLimit": 4,
+      "directions": [
+        16,
+        24,
+        11,
+        14
+      ],
+      "signature": "04f99b27",
+      "ms": 678,
+      "name": "坐着的小狗",
+      "silhouetteSimilarity": 0.7504873294346979,
+      "renderedSimilarity": 0.7239382239382239
+    },
+    {
+      "level": 103,
+      "arrows": 56,
+      "coverage": 1,
+      "initialExits": 2,
+      "maxSolutionChoices": 3,
+      "chainLimit": 6,
+      "directions": [
+        13,
+        15,
+        8,
+        20
+      ],
+      "signature": "ee11bd88",
+      "ms": 3640,
+      "name": "月亮枕着云",
+      "silhouetteSimilarity": 0.6428571428571429,
+      "renderedSimilarity": 0.6105476673427992
+    },
+    {
+      "level": 104,
+      "arrows": 53,
+      "coverage": 1,
+      "initialExits": 1,
+      "maxSolutionChoices": 3,
+      "chainLimit": 8,
+      "directions": [
+        13,
+        14,
+        14,
+        12
+      ],
+      "signature": "b3dc7c0a",
+      "ms": 450,
+      "name": "伸懒腰小猫",
+      "silhouetteSimilarity": 0.47674418604651164,
+      "renderedSimilarity": 0.5098934550989346
+    },
+    {
+      "level": 105,
+      "arrows": 70,
+      "coverage": 0.987410071942446,
+      "initialExits": 1,
+      "maxSolutionChoices": 3,
+      "chainLimit": 4,
+      "directions": [
+        26,
+        12,
+        18,
+        14
+      ],
+      "signature": "bbde9d02",
+      "ms": 688,
+      "name": "两颗心靠近",
+      "silhouetteSimilarity": 0.6184798807749627,
+      "renderedSimilarity": 0.6116071428571429
+    },
+    {
+      "level": 106,
+      "arrows": 57,
+      "coverage": 1,
+      "initialExits": 1,
+      "maxSolutionChoices": 2,
+      "chainLimit": 6,
+      "directions": [
+        8,
+        16,
+        22,
+        11
+      ],
+      "signature": "48fe9226",
+      "ms": 503,
+      "name": "跃起的小兔",
+      "silhouetteSimilarity": 0.6135458167330677,
+      "renderedSimilarity": 0.5786407766990291
+    },
+    {
+      "level": 107,
+      "arrows": 45,
+      "coverage": 1,
+      "initialExits": 2,
+      "maxSolutionChoices": 2,
+      "chainLimit": 8,
+      "directions": [
+        15,
+        10,
+        8,
+        12
+      ],
+      "signature": "d49a918b",
+      "ms": 436,
+      "name": "郁金香",
+      "silhouetteSimilarity": 0.6379746835443038,
+      "renderedSimilarity": 0.6556291390728477
+    },
+    {
+      "level": 108,
+      "arrows": 48,
+      "coverage": 0.9973958333333334,
+      "initialExits": 1,
+      "maxSolutionChoices": 2,
+      "chainLimit": 4,
+      "directions": [
+        6,
+        11,
+        11,
+        20
+      ],
+      "signature": "ed849d00",
+      "ms": 368,
+      "name": "散步的小狗",
+      "silhouetteSimilarity": 0.5261261261261261,
+      "renderedSimilarity": 0.5168738898756661
+    },
+    {
+      "level": 109,
+      "arrows": 69,
+      "coverage": 1,
+      "initialExits": 1,
+      "maxSolutionChoices": 4,
+      "chainLimit": 6,
+      "directions": [
+        17,
+        26,
+        17,
+        9
+      ],
+      "signature": "545cb08d",
+      "ms": 712,
+      "name": "云朵叠叠乐",
+      "silhouetteSimilarity": 0.7132352941176471,
+      "renderedSimilarity": 0.7036328871892925
+    },
+    {
+      "level": 110,
+      "arrows": 44,
+      "coverage": 1,
+      "initialExits": 2,
+      "maxSolutionChoices": 4,
+      "chainLimit": 8,
+      "directions": [
+        12,
+        9,
+        8,
+        15
+      ],
+      "signature": "e593c693",
+      "ms": 411,
+      "name": "散步的小猫",
+      "silhouetteSimilarity": 0.6271551724137931,
+      "renderedSimilarity": 0.5966029723991507
+    },
+    {
+      "level": 111,
+      "arrows": 45,
+      "coverage": 0.9971590909090909,
+      "initialExits": 1,
+      "maxSolutionChoices": 2,
+      "chainLimit": 4,
+      "directions": [
+        9,
+        6,
+        12,
+        18
+      ],
+      "signature": "1b498ab8",
+      "ms": 726,
+      "name": "爱心气球",
+      "silhouetteSimilarity": 0.6929347826086957,
+      "renderedSimilarity": 0.6344086021505376
+    },
+    {
+      "level": 112,
+      "arrows": 63,
+      "coverage": 0.9959349593495935,
+      "initialExits": 4,
+      "maxSolutionChoices": 4,
+      "chainLimit": 6,
+      "directions": [
+        13,
+        14,
+        15,
+        21
+      ],
+      "signature": "d8ce36d7",
+      "ms": 678,
+      "name": "垂耳小兔",
+      "silhouetteSimilarity": 0.7383720930232558,
+      "renderedSimilarity": 0.7002881844380403
+    },
+    {
+      "level": 113,
+      "arrows": 75,
+      "coverage": 1,
+      "initialExits": 1,
+      "maxSolutionChoices": 4,
+      "chainLimit": 8,
+      "directions": [
+        21,
+        16,
+        10,
+        28
+      ],
+      "signature": "a65c912e",
+      "ms": 568,
+      "name": "三朵小花",
+      "silhouetteSimilarity": 0.5985267034990792,
+      "renderedSimilarity": 0.6235955056179775
+    },
+    {
+      "level": 114,
+      "arrows": 63,
+      "coverage": 0.9930555555555556,
+      "initialExits": 2,
+      "maxSolutionChoices": 2,
+      "chainLimit": 4,
+      "directions": [
+        10,
+        11,
+        15,
+        27
+      ],
+      "signature": "98be617e",
+      "ms": 713,
+      "name": "小狗的家",
+      "silhouetteSimilarity": 0.5455927051671733,
+      "renderedSimilarity": 0.5477996965098634
+    },
+    {
+      "level": 115,
+      "arrows": 60,
+      "coverage": 1,
+      "initialExits": 2,
+      "maxSolutionChoices": 3,
+      "chainLimit": 6,
+      "directions": [
+        11,
+        11,
+        22,
+        16
+      ],
+      "signature": "a1204513",
+      "ms": 461,
+      "name": "风吹流云",
+      "silhouetteSimilarity": 0.5422222222222223,
+      "renderedSimilarity": 0.5717092337917485
+    },
+    {
+      "level": 116,
+      "arrows": 60,
+      "coverage": 1,
+      "initialExits": 2,
+      "maxSolutionChoices": 2,
+      "chainLimit": 8,
+      "directions": [
+        12,
+        6,
+        22,
+        20
+      ],
+      "signature": "fd88f791",
+      "ms": 473,
+      "name": "团成球的小猫",
+      "silhouetteSimilarity": 0.5593451568894953,
+      "renderedSimilarity": 0.5805142083897158
+    },
+    {
+      "level": 117,
+      "arrows": 60,
+      "coverage": 0.9961832061068703,
+      "initialExits": 2,
+      "maxSolutionChoices": 2,
+      "chainLimit": 4,
+      "directions": [
+        17,
+        21,
+        4,
+        18
+      ],
+      "signature": "7217e8b9",
+      "ms": 1369,
+      "name": "心意礼物",
+      "silhouetteSimilarity": 0.7343453510436433,
+      "renderedSimilarity": 0.6901669758812616
+    },
+    {
+      "level": 118,
+      "arrows": 60,
+      "coverage": 0.9975247524752475,
+      "initialExits": 1,
+      "maxSolutionChoices": 4,
+      "chainLimit": 6,
+      "directions": [
+        11,
+        16,
+        13,
+        20
+      ],
+      "signature": "4b613bb0",
+      "ms": 426,
+      "name": "月亮上的兔",
+      "silhouetteSimilarity": 0.6491935483870968,
+      "renderedSimilarity": 0.6028225806451613
+    },
+    {
+      "level": 119,
+      "arrows": 72,
+      "coverage": 1,
+      "initialExits": 1,
+      "maxSolutionChoices": 4,
+      "chainLimit": 8,
+      "directions": [
+        19,
+        21,
+        16,
+        16
+      ],
+      "signature": "5039ca6a",
+      "ms": 459,
+      "name": "窗台盆花",
+      "silhouetteSimilarity": 0.7702970297029703,
+      "renderedSimilarity": 0.7608247422680412
+    },
+    {
+      "level": 120,
+      "arrows": 50,
+      "coverage": 1,
+      "initialExits": 1,
+      "maxSolutionChoices": 3,
+      "chainLimit": 4,
+      "directions": [
+        18,
+        9,
+        13,
+        10
+      ],
+      "signature": "9d279faa",
+      "ms": 365,
+      "name": "伸懒腰小狗",
+      "silhouetteSimilarity": 0.6299212598425197,
+      "renderedSimilarity": 0.6023622047244095
+    }
+  ]
+}

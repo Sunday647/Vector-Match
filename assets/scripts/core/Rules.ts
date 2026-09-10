@@ -83,7 +83,7 @@ export class Session {
         if(this.penalized.has(id))return 'blocked';
         this.penalized.add(id);this.hearts--;return 'penalty';
     }
-    snapshot(): Snapshot {return {levelId:this.level.id,version:this.level.version,attemptId:this.attemptId,removed:[...this.removed],penalized:[...this.penalized],hearts:this.hearts,hintUsed:this.hintUsed};}
+    snapshot(): Snapshot {return {levelId:this.level.id,version:this.level.version,attemptId:this.attemptId,removed:Array.from(this.removed),penalized:Array.from(this.penalized),hearts:this.hearts,hintUsed:this.hintUsed};}
     restore(s: Snapshot):boolean {
         if(!s||s.levelId!==this.level.id||s.version!==this.level.version||!Array.isArray(s.removed)||!Array.isArray(s.penalized)||typeof s.attemptId!=='string')return false;
         const ids=new Set(this.level.arrows.map(a=>a.id));

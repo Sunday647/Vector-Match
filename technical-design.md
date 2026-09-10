@@ -4,6 +4,8 @@
 
 配套需求：[prd.md](prd.md)。本文落实已确认的双端路线、抽线规则和可解关卡生成方法；数值参数仍需原型验证。
 
+参数化运行时生成、无限关卡和结构去重的后续设计见 [infinite-level-generation.md](infinite-level-generation.md)。
+
 ## 1. 单工程架构
 
 采用 Cocos Creator + TypeScript，只发布独立微信小游戏。日常用 Cocos 自带的浏览器预览调试，微信构建用微信开发者工具和真机验证。不另行开发 H5 Canvas 渲染器。
