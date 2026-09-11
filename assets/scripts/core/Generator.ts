@@ -1,5 +1,5 @@
 import { Level, canExit } from './Rules';
-import { shapeForLevel } from './ShapeGrammar';
+import { shapeForLevel, prepareShape } from './ShapeGrammar';
 import { generateExtreme } from './ExtremeChallenge';
 
 export const GENERATOR_VERSION = 4;
@@ -22,7 +22,7 @@ export function chainLimit(index:number):number {
 }
 export function* generateLevel(index:number):Generator<void,Generated,unknown> {
     if(!Number.isSafeInteger(index)||index<0)throw Error('Invalid level index');
-    const s=shapeForLevel(index);yield;
+    yield;const s=yield* prepareShape(index);yield;
     let lastError:Error|null=null;
     for(let trial=0;trial<(index===2?1:8);trial++){
         const seed=index===2?102:s.seed+trial*7919;

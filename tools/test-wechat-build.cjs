@@ -35,7 +35,7 @@ assert.equal(saved.removed[0],legal.id);assert.equal(saved.penalized[0],locked.i
 assert(new rules.Session(level).restore(saved),'emitted save/restore');
 const {Main}=load('chunks:///_virtual/Main.ts'),main=new Main();
 main.gesture=new rules.Gesture();main.gesture.start(1,{x:0,y:0});main.gesture.start(2,{x:20,y:0});
-main.point=e=>e;main.modal=false;main.busy=false;let zoomed=false;
+main.point=e=>e;main.screen='game';main.modal=false;main.busy=false;let zoomed=false;
 main.zoom=()=>{zoomed=true;};main.transform=()=>{};main.pan={x:0,y:0};
 main.session=session;main.moveTouch({getID:()=>2,x:30,y:0});assert(zoomed,'emitted pinch gesture must read Map values');
 console.log('PASS emitted WeChat build: first 12 levels match source geometry and validate; penalties, JSON save/restore, pinch zoom');

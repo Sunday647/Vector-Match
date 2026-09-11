@@ -5,10 +5,11 @@ const storage=new Map();
 Module._load=function(id,...args){if(id==='cc')return {_decorator:{ccclass:()=>T=>T},Component:class{},sys:{localStorage:{setItem:(k,v)=>storage.set(k,v)}}};return original.call(this,id,...args);};
 const {Main}=require('../assets/scripts/Main.ts');Module._load=original;
 const m=new Main();m.root={};m.overlay={active:false,removeAllChildren(){}};
-for(const name of ['buildUI','resetView','draw','updateHUD','showModal','panel'])m[name]=()=>{};
+for(const name of ['buildUI','resetView','draw','updateHUD','showModal','panel','artwork'])m[name]=()=>{};
 m.text=()=>({string:''});
 function finish(){for(let i=0;i<10000&&m.generation;i++)m.update(.016);assert(!m.generation);}
 m.openLevel(0);finish();assert.equal(m.session.level.id,'generated-v2-1-contour-v4');assert(m.levels[1]);assert.equal(m.busy,false);
+m.levels[1]=undefined;m.generation=require('../assets/scripts/core/Generator.ts').generateLevel(1);m.generationIndex=1;m.generation.next();const pending=m.generation;m.openLevel(1);assert.strictEqual(m.generation,pending,'reuse in-flight prefetch');finish();
 m.openLevel(1);finish();assert.equal(m.session.level.id,'generated-v2-2-contour-v4');
 m.openLevel(13);assert(m.generationForeground);finish();assert.equal(m.session.level.id,'generated-v2-14-contour-v4');assert.equal(m.busy,false);
 const before=JSON.stringify(m.session.level);m.openLevel(13,true);finish();assert.equal(JSON.stringify(m.session.level),before);

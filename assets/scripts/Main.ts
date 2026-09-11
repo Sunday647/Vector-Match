@@ -1,9 +1,9 @@
-import { _decorator, Component, Node, Graphics, Color, Label, UITransform, Vec3, view, ResolutionPolicy, Mask, resources, input, Input, EventTouch, EventMouse, sys, game, Game, AudioSource, AudioClip } from 'cc';
+import { _decorator, Component, Node, Graphics, Color, Label, UITransform, Vec3, view, ResolutionPolicy, Mask, resources, input, Input, EventTouch, EventMouse, sys, game, Game, AudioSource, AudioClip, Sprite, SpriteFrame } from 'cc';
 import { Arrow, Level, Point, Session, Gesture, canExit, hitArrow, direction, LINE_WIDTH, HEAD_LENGTH, HEAD_WIDTH } from './core/Rules';
 import { generateLevel, levelTitle, Generated } from './core/Generator';
 import { solarTermForLevel } from './core/SolarTerms';
 const {ccclass}=_decorator;
-const INK='#344C65', MUTED='#8498AC', BLUE='#428EE8', PAPER='#FFFDF8';
+const INK='#5F7559', MUTED='#93A089', BLUE='#829874', PAPER='#FFFCF5';
 const STORAGE_KEY='one-arrow-clear-generator-demo-v1';
 const C=(s:string)=>new Color().fromHEX(s);
 type Button={x:number;y:number;w:number;h:number;run:()=>void};
@@ -16,6 +16,8 @@ export class Main extends Component {
     private progress!:Label;private hearts!:Label;private zoomLabel!:Label;private toastLabel!:Label;
     private leaving:{arrow:Arrow;time:number;color:string}|null=null;private wrong:{arrow:Arrow;time:number;color:string;finalRed:boolean;lost:boolean}|null=null;private shakeId='';private shakeTime=0;
     private saved:any={};private sound=true;private audio!:AudioSource;private tones:AudioClip[]=[];
+    private screen='home';private zoomTrack:Graphics|null=null;private zoomY=0;private sliding=false;
+    private loadingCat:Node|null=null;private loadingTime=0;private generationReset=false;
     onLoad(){
         view.setDesignResolutionSize(720,1280,ResolutionPolicy.FIXED_WIDTH);
         this.height=view.getVisibleSize().height;this.bh=Math.max(460,this.height-420);this.by=-5;
@@ -25,26 +27,54 @@ export class Main extends Component {
         try{this.saved=JSON.parse(sys.localStorage.getItem(STORAGE_KEY)||'{}');this.sound=this.saved.sound!==false;}catch{this.saved={};}
         this.panel(this.root,0,0,740,this.height+20,PAPER,0);
         const savedIndex=Number.isSafeInteger(this.saved.index)&&this.saved.index>=0?this.saved.index:0;
-        this.openLevel(savedIndex);
+        this.index=savedIndex;this.showHome();
         input.on(Input.EventType.TOUCH_START,this.startTouch,this);input.on(Input.EventType.TOUCH_MOVE,this.moveTouch,this);input.on(Input.EventType.TOUCH_END,this.endTouch,this);input.on(Input.EventType.TOUCH_CANCEL,this.cancelTouch,this);input.on(Input.EventType.MOUSE_WHEEL,this.wheel,this);
         game.on(Game.EVENT_HIDE,this.hide,this);view.on('canvas-resize',this.resize,this);
     }
     onDestroy(){input.off(Input.EventType.TOUCH_START,this.startTouch,this);input.off(Input.EventType.TOUCH_MOVE,this.moveTouch,this);input.off(Input.EventType.TOUCH_END,this.endTouch,this);input.off(Input.EventType.TOUCH_CANCEL,this.cancelTouch,this);input.off(Input.EventType.MOUSE_WHEEL,this.wheel,this);game.off(Game.EVENT_HIDE,this.hide,this);view.off('canvas-resize',this.resize,this);}
-    private resize(){this.height=view.getVisibleSize().height;this.bh=Math.max(460,this.height-420);if(this.session){this.gesture.clear();this.buildUI();this.resetView();this.draw();}}
+    private resize(){this.height=view.getVisibleSize().height;this.bh=Math.max(300,this.height-510);this.gesture.clear();if(this.screen==='home'){this.showHome();return;}if(this.session){this.buildUI();this.resetView();this.draw();this.updateHUD();}}
     private hide(){this.gesture.clear();this.activeButton=null;this.save();}
     private make(name:string,parent:Node,w=720,h=1280){const n=new Node(name);n.layer=1<<25;parent.addChild(n);n.addComponent(UITransform).setContentSize(w,h);return n;}
     private text(parent:Node,s:string,x:number,y:number,size=24,color=INK,width=680):Label{const n=this.make('Text',parent,width,size*1.7);n.setPosition(x,y);const l=n.addComponent(Label);l.string=s;l.fontSize=size;l.lineHeight=size*1.4;l.color=C(color);l.isBold=false;l.overflow=Label.Overflow.SHRINK;l.horizontalAlign=Label.HorizontalAlign.CENTER;l.verticalAlign=Label.VerticalAlign.CENTER;return l;}
     private panel(parent:Node,x:number,y:number,w:number,h:number,color:string,r=20):Graphics{const n=this.make('Panel',parent,w,h);n.setPosition(x,y);const g=n.addComponent(Graphics);g.fillColor=C(color);g.roundRect(-w/2,-h/2,w,h,r);g.fill();return g;}
-    private button(parent:Node,label:string,x:number,y:number,w:number,run:()=>void,primary=false,h=62){this.panel(parent,x,y-3,w,h,primary?'#C8DCF5':'#E4EBF3',h/2);this.panel(parent,x,y,w,h,primary?BLUE:'#FFFFFF',h/2);this.text(parent,label,x,y,23,primary?'#FFFFFF':INK,w-12);this.buttons.push({x,y,w,h,run});}
+    private button(parent:Node,label:string,x:number,y:number,w:number,run:()=>void,primary=false,h=62){this.panel(parent,x,y-3,w,h,'#E4E6D9',h/2);this.panel(parent,x,y,w,h,primary?BLUE:PAPER,h/2);this.text(parent,label,x,y,23,primary?'#FFFFFF':INK,w-12);this.buttons.push({x,y,w,h,run});}
+    private artwork(parent:Node,name:string,x:number,y:number,w:number,h:number){
+        const n=this.make(name,parent,w,h);n.setPosition(x,y);const sprite=n.addComponent(Sprite);sprite.sizeMode=Sprite.SizeMode.CUSTOM;
+        resources.load(`ui/${name}/spriteFrame`,SpriteFrame,(err,frame)=>{if(!err&&n.isValid){sprite.spriteFrame=frame;const size=frame.originalSize,fit=Math.min(w/size.width,h/size.height);n.getComponent(UITransform)!.setContentSize(size.width*fit,size.height*fit);}});
+        return n;
+    }
+    private nextLevel(){return Math.max(0,Number(this.saved.completed)||0);}
+    private showHome(){
+        this.save();this.screen='home';this.modal='';this.busy=false;this.generation=null;this.generationForeground=false;this.leaving=null;this.wrong=null;this.gesture.clear();this.activeButton=null;this.sliding=false;
+        this.root.removeAllChildren();this.buttons=[];this.zoomTrack=null;const top=this.height/2;
+        this.panel(this.root,0,0,740,this.height+20,PAPER,0);
+        this.button(this.root,'⚙',-286,top-100,54,()=>this.showModal('settings'),false,54);
+        this.artwork(this.root,'logo',0,top-this.height*.24,570,230);
+        this.artwork(this.root,'cat',0,top-this.height*.49,570,480);
+        const y=-top+228;
+        this.text(this.root,`已通关${this.nextLevel()}关`,0,y+104,23,MUTED);
+        this.button(this.root,'',0,y,416,()=>this.openLevel(this.nextLevel()),true,112);
+        const start=this.text(this.root,'开始游戏',0,y+16,35,'#FFFFFF');start.isBold=true;
+        this.text(this.root,`第${this.nextLevel()+1}关`,0,y-25,22,'#FFFFFF');
+        this.button(this.root,'关卡路线  ›',0,y-110,230,()=>{this.page=Math.floor(this.nextLevel()/6);this.showModal('levels');},false,52);
+        this.overlay=this.make('Modal',this.root);this.overlay.active=false;
+        this.loadingCat=null;
+        if(!this.levels[this.nextLevel()]){this.generation=generateLevel(this.nextLevel());this.generationIndex=this.nextLevel();this.generationForeground=false;}
+    }
     private openLevel(index:number,reset=false){
+        this.screen='game';
         if(!this.levels[index]){
-            this.generation=generateLevel(index);this.generationIndex=index;this.generationForeground=true;
+            if(!this.generation||this.generationIndex!==index)this.generation=generateLevel(index);
+            this.generationIndex=index;this.generationForeground=true;this.generationReset=reset;
             this.busy=true;this.buttons=[];this.gesture.clear();this.activeButton=null;
             if(this.overlay){this.overlay.active=true;this.overlay.removeAllChildren();this.panel(this.overlay,0,0,740,this.height+20,PAPER,0);}
-            this.loadingLabel=this.text(this.overlay||this.root,`正在生成第${index+1}关 · ${levelTitle(index)}…`,0,0,24,INK);
+            this.loadingTime=0;
+            this.loadingCat=this.artwork(this.overlay||this.root,'cat',0,60,260,260);
+            this.text(this.overlay||this.root,`第${index+1}关`,0,-110,27,INK);
+            this.loadingLabel=this.text(this.overlay||this.root,'小猫正在铺开彩线…',0,-154,20,MUTED);
             return;
         }
-        this.generation=null;this.generationForeground=false;
+        this.generation=null;this.generationForeground=false;this.loadingCat=null;
         this.index=index;this.session=new Session(this.levels[index]);
         if(!reset&&this.saved.attempts?.[this.session.level.id])this.session.restore(this.saved.attempts[this.session.level.id]);
         this.hint='';this.busy=false;this.leaving=null;this.wrong=null;this.shakeTime=0;this.modal='';this.gesture.clear();this.activeButton=null;
@@ -59,27 +89,29 @@ export class Main extends Component {
     }
     private buildUI(){
         this.root.removeAllChildren();this.buttons=[];const top=this.height/2;
+        this.bh=Math.max(300,this.height-510);this.by=-10;
         this.panel(this.root,0,0,740,this.height+20,PAPER,0);
-        const title=this.text(this.root,`第${this.index+1}关`,0,top-65,32,INK);title.isBold=true;
-        this.button(this.root,'Ⅱ',290,top-91,62,()=>this.showModal('pause'));
-        this.hearts=this.text(this.root,'♥  ♥  ♥',0,top-112,28,'#F16B7F',180);
-        this.text(this.root,`${solarTermForLevel(this.index).name} · ${this.levels[this.index]?.name||''}`,0,top-149,24,INK);
-        this.progress=this.text(this.root,'',0,top-185,18,MUTED);
+        const title=this.text(this.root,`第${this.index+1}关`,0,top-118,34,INK);title.isBold=true;
+        this.button(this.root,'‹',-286,top-118,60,()=>this.showHome());
+        this.button(this.root,'Ⅱ',286,top-118,60,()=>this.showModal('pause'));
+        this.hearts=this.text(this.root,'♥  ♥  ♥',0,top-171,34,'#EF967B',200);
+        this.progress=this.text(this.root,'0%',0,top-214,22,MUTED);
         const clip=this.make('Board viewport',this.root,660,this.bh);clip.setPosition(0,this.by);clip.addComponent(Mask).type=Mask.Type.GRAPHICS_RECT;
         this.board=this.make('Arrow artwork',clip,660,this.bh);this.drawing=this.board.addComponent(Graphics);
         this.hud=this.make('Controls',this.root);const bottom=-top;
-        this.toastLabel=this.text(this.hud,'沿箭头方向移出 · 双指放大看得更清楚',0,bottom+186,20,MUTED);
-        this.button(this.hud,'−',-230,bottom+119,66,()=>this.zoom(this.scale/1.35));
-        this.panel(this.hud,0,bottom+119,330,62,'#EAF1FA',31);
-        this.zoomLabel=this.text(this.hud,'100%',-72,bottom+119,22,BLUE,120);
-        this.button(this.hud,'查看全图',64,bottom+119,184,()=>{this.resetView();this.draw();},false,54);
-        this.button(this.hud,'＋',230,bottom+119,66,()=>this.zoom(this.scale*1.35));
-        this.button(this.hud,this.session.hintUsed?'提示已用':'找个出口',-160,bottom+43,220,()=>this.useHint(),true,58);
-        this.button(this.hud,'图案手册',160,bottom+43,220,()=>{this.page=Math.floor(this.index/6);this.showModal('levels');},false,58);
+        this.toastLabel=this.text(this.hud,'',0,bottom+232,18,MUTED);
+        this.zoomY=bottom+169;
+        this.button(this.hud,'−',-214,this.zoomY,56,()=>this.zoom(this.scale/1.35),false,56);
+        this.zoomLabel=this.text(this.hud,'100%',0,this.zoomY+38,19,INK,120);
+        this.zoomTrack=this.make('Zoom slider',this.hud,310,44).addComponent(Graphics);this.zoomTrack.node.setPosition(0,this.zoomY);
+        this.button(this.hud,'＋',214,this.zoomY,56,()=>this.zoom(this.scale*1.35),false,56);
+        this.artwork(this.hud,'cat',-271,bottom+69,130,110);
+        this.button(this.hud,'全图',-65,bottom+73,102,()=>{this.resetView();this.draw();},false,44);
+        this.button(this.hud,this.session.hintUsed?'提示已用':'提示',65,bottom+73,116,()=>this.useHint(),false,44);
         this.overlay=this.make('Modal',this.root);this.overlay.active=false;
     }
     private resetView(){const l=this.session.level;this.fit=Math.min(590/(l.width*this.pitch),(this.bh-60)/(l.height*this.pitch));this.scale=this.fit;this.pan={x:0,y:0};this.transform();}
-    private transform(){this.clampPan();this.board.setScale(this.scale,this.scale,1);this.board.setPosition(this.pan.x,this.pan.y);if(this.zoomLabel)this.zoomLabel.string=Math.round(this.scale/this.fit*100)+'%';}
+    private transform(){this.clampPan();this.board.setScale(this.scale,this.scale,1);this.board.setPosition(this.pan.x,this.pan.y);if(this.zoomLabel)this.zoomLabel.string=Math.round(this.scale/this.fit*100)+'%';if(this.zoomTrack){const g=this.zoomTrack,x=-146+292*(this.scale/this.fit-1)/5;g.clear();g.lineCap=Graphics.LineCap.ROUND;g.lineWidth=5;g.strokeColor=C('#DFE3D5');g.moveTo(-146,0);g.lineTo(146,0);g.stroke();g.strokeColor=C(BLUE);g.moveTo(-146,0);g.lineTo(x,0);g.stroke();g.fillColor=C(BLUE);g.circle(x,0,11);g.fill();}}
     private clampPan(){const l=this.session.level,mx=Math.max(0,(l.width*this.pitch*this.scale-600)/2+40),my=Math.max(0,(l.height*this.pitch*this.scale-this.bh+80)/2);this.pan.x=Math.max(-mx,Math.min(mx,this.pan.x));this.pan.y=Math.max(-my,Math.min(my,this.pan.y));}
     private zoom(next:number,anchor:Point={x:0,y:this.by}){if(this.modal||this.busy)return;const old=this.scale;this.scale=Math.max(this.fit,Math.min(this.fit*6,next));const ratio=this.scale/old;this.pan={x:anchor.x-(anchor.x-this.pan.x)*ratio,y:anchor.y-this.by-(anchor.y-this.by-this.pan.y)*ratio};this.transform();}
     private pos(p:Point):Point{return{x:(p.x-(this.session.level.width-1)/2)*this.pitch,y:(p.y-(this.session.level.height-1)/2)*this.pitch};}
@@ -104,8 +136,8 @@ export class Main extends Component {
     }
     if(this.wrong){const m=this.wrongMotion(this.wrong.time);const color=this.wrong.time>=0.62&&this.wrong.finalRed?'#ED475D':this.wrong.color;this.renderArrow(this.wrong.arrow,color,m.offset,m.shake);}
     if(this.leaving){const a=this.leaving.arrow;const length=a.points.length-1;const d=direction(a),h=a.points[a.points.length-1];const exit=d.x>0?this.session.level.width-h.x:d.x<0?h.x+1:d.y>0?this.session.level.height-h.y:h.y+1;this.renderArrow(a,this.leaving.color,(length+exit+2)*Math.min(1,this.leaving.time/0.55));}}
-    private updateHUD(){this.hearts.string=Array.from({length:3},(_,i)=>i<this.session.hearts?'♥':'♡').join(' ');this.progress.string=`${this.session.level.subtitle}  ·  ${this.session.removed.size}/${this.session.level.arrows.length}`;}
-    private save(){if(!this.session)return;this.saved.index=this.index;this.saved.sound=this.sound;this.saved.attempts={};this.saved.attempts[this.session.level.id]=this.session.snapshot();try{sys.localStorage.setItem(STORAGE_KEY,JSON.stringify(this.saved));}catch{this.message('本次进度暂时无法保存');}}
+    private updateHUD(){this.hearts.string=Array.from({length:3},(_,i)=>i<this.session.hearts?'♥':'♡').join(' ');this.progress.string=`${Math.floor(this.session.removed.size/Math.max(1,this.session.level.arrows.length)*100)}%`;}
+    private save(){this.saved.sound=this.sound;if(this.session){this.saved.index=this.index;this.saved.attempts=this.saved.attempts||{};this.saved.attempts[this.session.level.id]=this.session.snapshot();if(this.session.status==='won'){this.saved.wins=this.saved.wins||{};this.saved.wins[this.index]=true;let n=this.nextLevel();while(this.saved.wins[n])n++;this.saved.completed=n;}}try{sys.localStorage.setItem(STORAGE_KEY,JSON.stringify(this.saved));}catch{this.message('本次进度暂时无法保存');}}
     private message(s:string){this.toast=s;this.toastTime=3;if(this.toastLabel)this.toastLabel.string=s;}
     private useHint(){if(this.busy||this.session.status!=='playing')return;if(this.session.hintUsed){this.message('本局提示已使用，试着放大观察');return;}const a=this.session.level.arrows.find(a=>canExit(a,this.session.level,this.session.removed));if(!a){this.message('关卡状态异常，请重新挑战');return;}this.session.hintUsed=true;this.hint=a.id;this.save();this.draw();this.message('光圈里的箭头，可以自由离开');}
     private tap(p:Point){if(this.busy||this.modal||this.session.status!=='playing')return;const local={x:(p.x-this.pan.x)/this.scale/this.pitch+(this.session.level.width-1)/2,y:(p.y-this.by-this.pan.y)/this.scale/this.pitch+(this.session.level.height-1)/2};
@@ -118,26 +150,29 @@ export class Main extends Component {
     private play(i:number){if(this.sound&&this.tones[i])this.audio.playOneShot(this.tones[i],0.3);}
     private point(e:EventTouch|EventMouse):Point {const p=e.getUILocation();const q=this.node.getComponent(UITransform)!.convertToNodeSpaceAR(new Vec3(p.x,p.y));return{x:q.x,y:q.y};}
     private inside(p:Point){return Math.abs(p.x)<330&&Math.abs(p.y-this.by)<this.bh/2;}
-    private startTouch(e:EventTouch){if(!this.session)return;const p=this.point(e),id=e.getID();this.gesture.start(id,p);
+    private startTouch(e:EventTouch){const p=this.point(e),id=e.getID();this.gesture.start(id,p);
         if(this.gesture.points.size>1){this.activeButton=null;return;}
         this.activeButton=[...this.buttons].reverse().find(b=>Math.abs(p.x-b.x)<b.w/2&&Math.abs(p.y-b.y)<b.h/2)||null;
+        this.sliding=this.screen==='game'&&!this.modal&&!this.busy&&!this.activeButton&&Math.abs(p.x)<160&&Math.abs(p.y-this.zoomY)<24;
+        if(this.sliding){this.zoom(this.fit*(1+5*Math.max(0,Math.min(1,(p.x+146)/292))));return;}
         if(!this.activeButton&&!this.inside(p))this.gesture.cancelled=true;
     }
     private moveTouch(e:EventTouch){if(!this.session)return;const id=e.getID(),p=this.point(e),old=this.gesture.points.get(id);if(!old)return;
-        const before=Array.from(this.gesture.points.values());this.gesture.move(id,p);if(this.modal||this.busy||this.activeButton)return;
+        const before=Array.from(this.gesture.points.values());this.gesture.move(id,p);if(this.screen!=='game'||this.modal||this.busy||this.activeButton)return;
+        if(this.sliding){this.zoom(this.fit*(1+5*Math.max(0,Math.min(1,(p.x+146)/292))));return;}
         const after=Array.from(this.gesture.points.values());if(after.length===2){const dist=(ps:Point[])=>Math.hypot(ps[0].x-ps[1].x,ps[0].y-ps[1].y);const mid=(ps:Point[])=>({x:(ps[0].x+ps[1].x)/2,y:(ps[0].y+ps[1].y)/2});const b=mid(before),a=mid(after);if(dist(before)>5){this.zoom(this.scale*dist(after)/dist(before),b);this.pan.x+=a.x-b.x;this.pan.y+=a.y-b.y;this.transform();}}
         else if(after.length===1&&this.gesture.cancelled&&this.scale>this.fit*1.01){this.pan.x+=p.x-old.x;this.pan.y+=p.y-old.y;this.transform();}
     }
-    private endTouch(e:EventTouch){const p=this.point(e),click=this.gesture.end(e.getID()),button=this.activeButton;if(!this.gesture.points.size)this.activeButton=null;if(!click)return;if(button){if(Math.abs(p.x-button.x)<button.w/2&&Math.abs(p.y-button.y)<button.h/2)button.run();}else if(this.inside(p))this.tap(p);}
-    private cancelTouch(){this.gesture.clear();this.activeButton=null;}
-    private wheel(e:EventMouse){if(!this.session)return;const p=this.point(e);if(this.inside(p)){this.zoom(this.scale*Math.exp(e.getScrollY()*0.0015),p);}}
-    private closeModal(){this.modal='';this.overlay.active=false;this.buildUI();this.transform();this.draw();this.updateHUD();}
+    private endTouch(e:EventTouch){const p=this.point(e),click=this.gesture.end(e.getID()),button=this.activeButton,sliding=this.sliding;if(!this.gesture.points.size){this.activeButton=null;this.sliding=false;}if(!click||sliding)return;if(button){if(Math.abs(p.x-button.x)<button.w/2&&Math.abs(p.y-button.y)<button.h/2)button.run();}else if(this.screen==='game'&&this.session&&this.inside(p))this.tap(p);}
+    private cancelTouch(){this.gesture.clear();this.activeButton=null;this.sliding=false;}
+    private wheel(e:EventMouse){if(!this.session||this.screen!=='game')return;const p=this.point(e);if(this.inside(p)){this.zoom(this.scale*Math.exp(e.getScrollY()*0.0015),p);}}
+    private closeModal(){this.modal='';this.overlay.active=false;if(this.screen==='home'){this.showHome();return;}this.buildUI();this.transform();this.draw();this.updateHUD();}
     private showModal(kind:string){
         if(this.busy)return;this.modal=kind;this.gesture.clear();this.activeButton=null;this.buttons=[];this.overlay.removeAllChildren();this.overlay.active=true;
-        const bg=this.panel(this.overlay,0,0,740,this.height+20,'#EAF2FC',0);bg.fillColor=new Color(234,242,252,245);
+        this.panel(this.overlay,0,0,740,this.height+20,PAPER,0);
         this.panel(this.overlay,0,10,610,650,'#FFFFFF',38);
         this.text(this.overlay,kind==='won'?'✦':'···',0,238,46,BLUE);
-        const titles:any={pause:'休息一小会儿',levels:'挑一幅小风景',won:'又解开了一点美好',lost:'慢慢来，再试一次',restart:'重新铺开这幅图案？'};
+        const titles:any={settings:'设置',pause:'休息一小会儿',levels:'关卡路线',won:'又解开了一点美好',lost:'慢慢来，再试一次',restart:'重新铺开这幅图案？'};
         this.text(this.overlay,titles[kind],0,156,32,INK);
         if(kind==='levels'){
             this.text(this.overlay,`参数图案试玩 · 第 ${this.page*6+1}—${this.page*6+6} 关`,0,108,20,MUTED);
@@ -148,6 +183,9 @@ export class Main extends Component {
             this.button(this.overlay,'上一页',-188,-251,155,()=>{this.page=Math.max(0,this.page-1);this.showModal('levels');},false,45);
             this.button(this.overlay,'返回',0,-251,155,()=>this.closeModal(),false,45);
             this.button(this.overlay,'下一页',188,-251,155,()=>{this.page++;this.showModal('levels');},false,45);
+        }else if(kind==='settings'){
+            this.button(this.overlay,this.sound?'声音：开启':'声音：关闭',0,18,400,()=>{this.sound=!this.sound;this.save();this.showModal('settings');},true);
+            this.button(this.overlay,'返回主页',0,-80,400,()=>this.closeModal());
         }else if(kind==='pause'){
             this.text(this.overlay,'缩放和拖动都不会扣心',0,96,21,MUTED);
             this.button(this.overlay,'继续解开',0,18,400,()=>this.closeModal(),true);
@@ -160,11 +198,12 @@ export class Main extends Component {
         }else{
             this.text(this.overlay,kind==='won'?'让颜色散去，给自己留一点轻松':'放大看看，下次会更从容',0,77,22,MUTED);
             this.button(this.overlay,kind==='won'?'下一幅风景':'再试一次',0,-20,400,()=>this.openLevel(kind==='won'?this.index+1:this.index,true),true);
-            this.button(this.overlay,'图案手册',0,-110,400,()=>{this.page=Math.floor(this.index/6);this.showModal('levels');});
+            this.button(this.overlay,'返回主页',0,-110,400,()=>this.showHome());
             if(kind==='won')this.play(2);
         }
     }
     update(dt:number){
+        if(this.generationForeground&&this.generation&&this.loadingCat){this.loadingTime+=dt;const t=this.loadingTime;this.loadingCat.angle=Math.sin(t*2.4)*9;this.loadingCat.setPosition(Math.sin(t*1.2)*12,60+Math.sin(t*2.4)*7);const s=1+Math.sin(t*2.4)*.018;this.loadingCat.setScale(s,s,1);}
         if(this.generation){
             const start=Date.now();
             try{
@@ -175,7 +214,7 @@ export class Main extends Component {
                         this.levels[i]=result.value.level;this.generation=null;
                         // Keep only the nearby playable boards; regenerate others from their index.
                         for(const k of Object.keys(this.levels))if(Math.abs(Number(k)-i)>6)delete this.levels[Number(k)];
-                        if(foreground){this.loadingLabel=null;this.openLevel(i);}
+                        if(foreground){this.loadingLabel=null;this.loadingCat=null;this.openLevel(i,this.generationReset);}
                         break;
                     }
                 }while(Date.now()-start<5);
@@ -189,10 +228,10 @@ export class Main extends Component {
                 }
             }
         }
-        if(!this.session||this.generationForeground&&this.generation)return;
+        if(this.screen==='home'||!this.session||this.generationForeground&&this.generation)return;
         if(this.leaving){this.leaving.time+=dt;if(this.leaving.time>=0.55){this.leaving=null;this.busy=false;if(this.session.status==='won')this.showModal('won');}this.draw();}
         if(this.wrong){this.wrong.time+=dt;if(this.wrong.time>=0.72){const lost=this.wrong.lost;this.wrong=null;this.busy=false;if(lost)this.showModal('lost');}this.draw();}
         if(this.shakeTime>0){this.shakeTime=Math.max(0,this.shakeTime-dt);this.draw();}
-        if(this.toastTime>0){this.toastTime-=dt;if(this.toastTime<=0)this.toastLabel.string='沿箭头方向移出 · 双指放大看得更清楚';}
+        if(this.toastTime>0){this.toastTime-=dt;if(this.toastTime<=0)this.toastLabel.string='';}
     }
 }

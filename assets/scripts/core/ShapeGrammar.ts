@@ -112,7 +112,7 @@ function routeFingerprint(s:Silhouette,index:number):number[] {
  }
  return silhouetteFingerprint(points);
 }
-export function shapeForLevel(index:number):Silhouette{
+export function* prepareShape(index:number):Generator<void,Silhouette,unknown>{
  if(!Number.isSafeInteger(index)||index<0)throw Error('Invalid level index');
  const cached=cache.get(index);if(cached)return cached;
  // Rebuild the deterministic schedule for an old uncached jump. The rolling
@@ -133,6 +133,10 @@ export function shapeForLevel(index:number):Silhouette{
   if(!selected)throw Error('Silhouette grammar needs a more distinct pose at level '+(current+1));
   cache.set(current,selected);routeFingerprints.set(current,selectedRoute);scheduledThrough=current;
   if(cache.size>96){const oldest=cache.keys().next().value!;cache.delete(oldest);routeFingerprints.delete(oldest);}
+  yield;
  }
  return cache.get(index)!;
+}
+export function shapeForLevel(index:number):Silhouette{
+ const task=prepareShape(index);let result=task.next();while(!result.done)result=task.next();return result.value;
 }
