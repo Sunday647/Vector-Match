@@ -10,7 +10,7 @@
       "uuid": "7b4329e4-f708-4ad4-9ef9-1a910b79b389"
     }
   ],
-  "debug": true,
+  "debug": false,
   "md5Cache": false,
   "packages": {
     "wechatgame": {

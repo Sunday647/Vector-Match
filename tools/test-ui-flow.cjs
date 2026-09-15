@@ -12,7 +12,7 @@ m.button=(parent,label,x,y,w,run,primary,h=62)=>{m.buttons.push({label,x,y,w,h,r
 m.showHome();assert(labels.includes('第1关'));assert(labels.includes('已通关0关'));
 let opened=-1;m.openLevel=i=>opened=i;
 m.point=e=>e;
-const start=m.buttons.find(b=>b.label==='');
+const start=m.buttons.find(b=>b.x===0&&b.w===540);
 const event={x:start.x,y:start.y,getID:()=>1};m.startTouch(event);m.endTouch(event);
 assert.equal(opened,0,'home start works before any session exists');
 m.session={level:{id:'test',arrows:Array(74)},removed:new Set(),hearts:3,status:'playing',snapshot:()=>({})};
@@ -24,3 +24,10 @@ assert(labels.includes('第12关'));assert(labels.includes('已通关11关'));
 m.index=20;m.save();assert.equal(m.nextLevel(),11,'demo jumping must not mark unplayed levels complete');
 m.saved={completed:10};m.session.status='playing';m.showHome();assert(labels.includes('第11关'));
 console.log('PASS UI flow: first-launch home touch, next-level progress, 0/50/100 percent, no false completions from demo jumps.');
+// The engine resets sharedCanvas to its default 640x960 during addComponent.
+// The rank message must be sent afterward, using that same design size.
+let initialized=false,requested=false;
+globalThis.wx={getOpenDataContext:()=>({postMessage:msg=>{assert(initialized,'initialize SubContextView before requesting draw');assert.equal(msg.width,640);assert.equal(msg.height,960);requested=true;}})};
+m.make=(name,parent,w,h)=>({setPosition(){},setScale(x,y){assert.equal(w*x,676);assert.equal(h*y,845);},addComponent(){initialized=true;return {update(){}};}});
+m.showRankCanvas();assert(requested);delete globalThis.wx;
+console.log('PASS rank canvas uses engine design size and initializes before rendering');

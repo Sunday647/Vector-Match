@@ -6,6 +6,7 @@
   },
   "scripts": {
     "test": "node tools/test.cjs",
-    "generate": "node tools/generate.cjs"
+    "generate": "node tools/generate.cjs",
+    "patch:wechat-first-screen": "python3 tools/patch-wechat-first-screen.py"
   }
 }

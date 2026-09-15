@@ -1,9 +1,9 @@
 export type Point = { x: number; y: number };
 export type Arrow = { id: string; points: Point[]; color: string; colorBand?: number };
 export type Level = { id: string; version: number; name: string; subtitle: string; width: number; height: number; arrows: Arrow[] };
-export const LINE_WIDTH = 0.25;
-export const HEAD_WIDTH = 0.54;
-export const HEAD_LENGTH = 0.50;
+export const LINE_WIDTH = 0.28;
+export const HEAD_WIDTH = 0.62;
+export const HEAD_LENGTH = 0.58;
 export function direction(a: Arrow): Point {
     const p = a.points, n = p.length;
     return { x: Math.sign(p[n-1].x-p[n-2].x), y: Math.sign(p[n-1].y-p[n-2].y) };
@@ -83,11 +83,12 @@ export class Session {
         if(this.penalized.has(id))return 'blocked';
         this.penalized.add(id);this.hearts--;return 'penalty';
     }
+    addHeart(max=3):void {this.hearts=Math.min(max,this.hearts+1);}
     snapshot(): Snapshot {return {levelId:this.level.id,version:this.level.version,attemptId:this.attemptId,removed:Array.from(this.removed),penalized:Array.from(this.penalized),hearts:this.hearts,hintUsed:this.hintUsed};}
     restore(s: Snapshot):boolean {
         if(!s||s.levelId!==this.level.id||s.version!==this.level.version||!Array.isArray(s.removed)||!Array.isArray(s.penalized)||typeof s.attemptId!=='string')return false;
         const ids=new Set(this.level.arrows.map(a=>a.id));
-        if([...s.removed,...s.penalized].some(id=>!ids.has(id))||new Set(s.removed).size!==s.removed.length||new Set(s.penalized).size!==s.penalized.length||s.penalized.length>3||s.hearts!==3-s.penalized.length)return false;
+        if([...s.removed,...s.penalized].some(id=>!ids.has(id))||new Set(s.removed).size!==s.removed.length||new Set(s.penalized).size!==s.penalized.length||s.penalized.length>3||!Number.isInteger(s.hearts)||s.hearts<0||s.hearts>3||s.hearts<3-s.penalized.length)return false;
         // Reject corrupt snapshots that claim a blocked arrow was removed first.
         const remaining=new Set<string>();
         for(const id of s.removed){const a=this.level.arrows.find(a=>a.id===id)!;if(!canExit(a,this.level,remaining))return false;remaining.add(id);}
