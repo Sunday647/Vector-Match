@@ -18,3 +18,10 @@
 - 内置 imagegen 制作素材，JPEG/调色板 PNG 压缩。
 - 兼容检查不提供 ctx.ellipse；加载、成功、空榜、失败均通过。
 - Canvas 排行榜截图使用示例数据做布局检查，不是实际好友数据。
+
+## 通关与山路 / 2026-09-16
+- 通关采用 victory.png 猫咪木框，动态通关数、关卡轮廓、下一关和返回主页按钮。
+- 山路采用 mountain.jpg 森林山景，动态连续路径和编号节点；绿为完成、金为当前、灰锁为未解锁。
+- 向上/下拖动或鼠标滚轮浏览，自动定位当前关，底部按钮回到当前关。仅生成可见节点，测试覆盖至3000关。
+- 素材由内置 imagegen 生成。mountain prompt: sunny hand-painted woodland mountain hiking trail, no UI or nodes; victory prompt: transparent calico-cat wood/parchment popup with blank title and buttons, no text.
+- 验证：路线范围与连续编号、主页无 session 时拖动、防误点、UI进度、编译后12关几何及存档。

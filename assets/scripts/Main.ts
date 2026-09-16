@@ -5,6 +5,7 @@ import { solarTermForLevel } from './core/SolarTerms';
 import { canClaimAdReward, initCloud, loadCloudProgress, markAdReward, mergeProgress, saveCloudProgress } from './core/CloudProgress';
 import { initRewardedAd, showRewardedAd } from './core/RewardedAd';
 import { reportBestLevel, requestFriendRank } from './core/Leaderboard';
+import { ROUTE_STEP, ROUTE_TILE_HEIGHT, ROUTE_TILE_CENTER, routeX, clampRoute, visibleRoute } from './core/Route';
 const {ccclass}=_decorator;
 const INK='#405634', MUTED='#87916B', BLUE='#78934B', PAPER='#FFFCF5';
 const STORAGE_KEY='one-arrow-clear-generator-demo-v1';
@@ -25,6 +26,7 @@ export class Main extends Component {
     private screen='home';private zoomTrack:Graphics|null=null;private zoomY=0;private sliding=false;
     private loadingCat:Node|null=null;private loadingTime=0;private generationReset=false;
     private cloudEnabled=false;private cloudSyncing=false;private rewardedAdEnabled=false;
+    private routeWorld:Node|null=null;private routeScenery:Node|null=null;private routeTiles=new Map<number,Node>();private routeLayer:Node|null=null;private routeOffset=0;private routeHeight=0;private routeButtons:Button[]=[];
     private rankView:SubContextView|null=null;private rankTime=0;
     onLoad(){
         view.setDesignResolutionSize(720,1280,ResolutionPolicy.FIXED_WIDTH);
@@ -235,9 +237,10 @@ export class Main extends Component {
         this.activeButton=[...this.buttons].reverse().find(b=>Math.abs(p.x-b.x)<b.w/2&&Math.abs(p.y-b.y)<b.h/2)||null;
         this.sliding=this.screen==='game'&&!this.modal&&!this.busy&&!this.activeButton&&Math.abs(p.x)<116&&Math.abs(p.y-this.zoomY)<24;
         if(this.sliding){this.zoom(this.fit*(1+5*Math.max(0,Math.min(1,(p.x+100)/200))));return;}
+        if(this.modal==='levels')return;
         if(!this.activeButton&&!this.inside(p))this.gesture.cancelled=true;
     }
-    private moveTouch(e:EventTouch){if(!this.session)return;const id=e.getID(),p=this.point(e),old=this.gesture.points.get(id);if(!old)return;
+    private moveTouch(e:EventTouch){if(this.modal==='levels'){const p=this.point(e),old=this.gesture.points.get(e.getID());if(!old)return;this.gesture.move(e.getID(),p);if(this.gesture.cancelled){this.activeButton=null;this.routeOffset=clampRoute(this.routeOffset-(p.y-old.y),this.nextLevel());this.renderRoute();}return;}if(!this.session)return;const id=e.getID(),p=this.point(e),old=this.gesture.points.get(id);if(!old)return;
         const before=Array.from(this.gesture.points.values());this.gesture.move(id,p);if(this.screen!=='game'||this.modal||this.busy||this.activeButton)return;
         if(this.sliding){this.zoom(this.fit*(1+5*Math.max(0,Math.min(1,(p.x+100)/200))));return;}
         const after=Array.from(this.gesture.points.values());if(after.length===2){const dist=(ps:Point[])=>Math.hypot(ps[0].x-ps[1].x,ps[0].y-ps[1].y);const mid=(ps:Point[])=>({x:(ps[0].x+ps[1].x)/2,y:(ps[0].y+ps[1].y)/2});const b=mid(before),a=mid(after);if(dist(before)>5){this.zoom(this.scale*dist(after)/dist(before),b);this.pan.x+=a.x-b.x;this.pan.y+=a.y-b.y;this.transform();}}
@@ -245,7 +248,7 @@ export class Main extends Component {
     }
     private endTouch(e:EventTouch){const p=this.point(e),click=this.gesture.end(e.getID()),button=this.activeButton,sliding=this.sliding;if(!this.gesture.points.size){this.activeButton=null;this.sliding=false;}if(!click||sliding)return;if(button){if(Math.abs(p.x-button.x)<button.w/2&&Math.abs(p.y-button.y)<button.h/2)button.run();}else if(this.screen==='game'&&this.session&&this.inside(p))this.tap(p);}
     private cancelTouch(){this.gesture.clear();this.activeButton=null;this.sliding=false;}
-    private wheel(e:EventMouse){if(!this.session||this.screen!=='game')return;const p=this.point(e);if(this.inside(p)){this.zoom(this.scale*Math.exp(e.getScrollY()*0.0015),p);}}
+    private wheel(e:EventMouse){if(this.modal==='levels'){this.routeOffset=clampRoute(this.routeOffset+e.getScrollY()*.5,this.nextLevel());this.renderRoute();return;}if(!this.session||this.screen!=='game')return;const p=this.point(e);if(this.inside(p)){this.zoom(this.scale*Math.exp(e.getScrollY()*0.0015),p);}}
     private closeModal(){this.modal='';this.overlay.active=false;if(this.screen==='home'){this.showHome();return;}this.buildUI();this.transform();this.draw();this.updateHUD();}
     private showRankFallback(message='好友数据读取中…'){
         const completed=this.nextLevel();
@@ -274,9 +277,62 @@ export class Main extends Component {
         rank.update();
     }
 
+    private showRoute(){
+        this.routeOffset=this.nextLevel()*ROUTE_STEP;
+        this.routeTiles.clear();
+        const top=this.height/2;
+        this.routeHeight=this.height-360;
+        const clip=this.make('Mountain route viewport',this.overlay,720,this.height+50);clip.setPosition(0,-25);clip.addComponent(Mask).type=Mask.Type.GRAPHICS_RECT;
+        this.routeWorld=this.make('Scrolling mountain',clip,720,this.height);
+        this.routeScenery=this.make('Painted scenery',this.routeWorld,720,this.height);
+        this.routeLayer=this.make('Visible level nodes',this.routeWorld,720,this.height);
+        this.panel(this.overlay,0,top-110,386,86,'#A77943',22);this.panel(this.overlay,0,top-104,386,82,'#F4D7A3',22);
+        this.text(this.overlay,'关卡路线',0,top-104,38,'#603618',360).isBold=true;
+        this.panel(this.overlay,0,top-173,250,42,'#FFF3D9',18);this.text(this.overlay,`已通关${this.nextLevel()}关`,0,top-173,23,'#603618',240);
+        this.button(this.overlay,'‹',-290,top-103,64,()=>this.closeModal(),false,64);
+        this.button(this.overlay,'⌖ 回到当前关',0,-top+97,280,()=>{this.routeOffset=this.nextLevel()*ROUTE_STEP;this.renderRoute();},false,56);
+        this.panel(this.overlay,0,-top+41,340,32,'#FFF3D9',16);this.text(this.overlay,'上下滑动，继续探索',0,-top+41,19,'#603618',330);
+        this.routeButtons=this.buttons.slice();this.renderRoute();
+    }
+    private renderRoute(){
+        if(!this.routeLayer)return;this.routeLayer.removeAllChildren();this.buttons=this.routeButtons.slice();
+        const completed=this.nextLevel(),visible=visibleRoute(this.routeOffset,this.routeHeight,completed);
+        this.routeWorld!.setPosition(0,-this.routeOffset);
+        const firstTile=Math.floor((this.routeOffset-this.height/2+90)/ROUTE_TILE_HEIGHT),lastTile=Math.floor((this.routeOffset+this.height/2+90)/ROUTE_TILE_HEIGHT);
+        for(const [key,node] of this.routeTiles)if(key<firstTile||key>lastTile){node.destroy();this.routeTiles.delete(key);}
+        for(let tile=firstTile;tile<=lastTile;tile++)if(!this.routeTiles.has(tile))this.routeTiles.set(tile,this.artwork(this.routeScenery!,'mountain',0,tile*ROUTE_TILE_HEIGHT+ROUTE_TILE_CENTER,720,ROUTE_TILE_HEIGHT,true));
+        for(const i of visible){const x=routeX(i),y=i*ROUTE_STEP;if(Math.abs(y-this.routeOffset)>this.routeHeight/2-45)continue;
+            const current=i===completed,done=i<completed,fill=current?'#F1BE54':done?'#789C51':'#D8D4C4';
+            this.panel(this.routeLayer,x,y-4,78,78,'#86613D',39);this.panel(this.routeLayer,x,y,76,76,'#FFF1CA',38);this.panel(this.routeLayer,x,y,64,64,fill,32);
+            this.text(this.routeLayer,String(i+1),x,y+(done?-1:0),26,done?'#FFFFFF':'#55452B',66).isBold=true;
+            if(done)this.text(this.routeLayer,'✓',x+27,y-26,22,'#FFF7DA',32);
+            if(i>completed){const lock=this.make('Locked',this.routeLayer,20,20).addComponent(Graphics);lock.node.setPosition(x+26,y-26);lock.fillColor=C('#796F5A');lock.roundRect(-7,-7,14,12,3);lock.fill();lock.strokeColor=C('#796F5A');lock.lineWidth=3;lock.arc(0,5,5,0,Math.PI);lock.stroke();}
+            if(current){const side=x>30?-1:1;
+                const cat=this.make('Route companion',this.routeLayer,60,60).addComponent(Graphics);cat.node.setPosition(x+side*100,y+57);cat.fillColor=C('#FFF3D7');cat.moveTo(-23,3);cat.lineTo(-25,28);cat.lineTo(-7,16);cat.lineTo(8,16);cat.lineTo(25,28);cat.lineTo(23,3);cat.close();cat.fill();cat.ellipse(0,0,25,20);cat.fill();cat.fillColor=C('#DE9955');cat.ellipse(-13,7,10,12);cat.fill();cat.strokeColor=C('#60472F');cat.lineWidth=2;cat.moveTo(-14,1);cat.lineTo(-7,-1);cat.moveTo(7,-1);cat.lineTo(14,1);cat.stroke();cat.fillColor=C('#78934B');cat.roundRect(-24,-21,48,9,4);cat.fill();
+                this.panel(this.routeLayer,x+side*124,y,156,40,'#FFF0C8',14);this.text(this.routeLayer,'从这里出发',x+side*124,y,20,'#664723',150);}
+            if(i<=completed)this.buttons.push({x,y:y-this.routeOffset-25,w:84,h:84,run:()=>this.openLevel(i)});
+        }
+    }
+    private showVictory(){
+        const panel=this.make('Victory composition',this.overlay,640,820);const k=Math.min(1,(this.height-160)/820);panel.setScale(k,k,1);
+        this.artwork(panel,'victory',0,0,640,820,true);
+        this.text(panel,'顺利通关',0,166,46,'#603618',510).isBold=true;
+        this.text(panel,`第${this.index+1}关已完成`,0,85,26,'#603618',440).isBold=true;
+        // Reconstruct this level's colored silhouette rather than showing an unrelated reward.
+        const art=this.make('Completed pattern',panel,300,200).addComponent(Graphics);art.node.setPosition(0,-22);
+        const level=this.session.level,unit=Math.min(240/level.width,165/level.height),cells=new Set<string>();
+        for(const arrow of level.arrows){art.fillColor=C(this.arrowColor(arrow));for(let j=1;j<arrow.points.length;j++){const a=arrow.points[j-1],b=arrow.points[j],len=Math.abs(b.x-a.x)+Math.abs(b.y-a.y);for(let t=0;t<=len;t++){const x=a.x+Math.sign(b.x-a.x)*t,y=a.y+Math.sign(b.y-a.y)*t,key=x+','+y;if(cells.has(key))continue;cells.add(key);art.circle((x-(level.width-1)/2)*unit,(y-(level.height-1)/2)*unit,unit*.65);art.fill();}}}
+        this.text(panel,'又解开了一点美好',0,-140,23,'#735333',420);
+        this.text(panel,'下一关',0,-250,35,'#603618',400).isBold=true;this.text(panel,`第${this.index+2}关`,0,-286,22,'#603618',260);
+        this.text(panel,'返回主页',0,-351,26,'#603618',300).isBold=true;
+        this.buttons.push({x:0,y:-265*k,w:410*k,h:85*k,run:()=>this.openLevel(this.index+1,true)});
+        this.buttons.push({x:0,y:-352*k,w:280*k,h:62*k,run:()=>this.showHome()});this.play(2);
+    }
     private showModal(kind:string){
         if(this.busy)return;this.modal=kind;this.rankView=null;this.gesture.clear();this.activeButton=null;this.buttons=[];this.overlay.removeAllChildren();this.overlay.active=true;
-        this.panel(this.overlay,0,0,740,this.height+20,kind==='rank'?'#27303ACC':PAPER,0);
+        this.panel(this.overlay,0,0,740,this.height+20,kind==='rank'||kind==='won'?'#27303ACC':PAPER,0);
+        if(kind==='levels'){this.showRoute();return;}
+        if(kind==='won'){this.showVictory();return;}
         if(kind==='rank'){
             this.artwork(this.overlay,'forest-rank',0,-22,676,845,true);
         }else{
@@ -285,16 +341,7 @@ export class Main extends Component {
             const titles:any={settings:'设置',pause:'休息一小会儿',levels:'关卡路线',rank:'好友排行榜',won:'又解开了一点美好',lost:'慢慢来，再试一次',restart:'重新铺开这幅图案？'};
             this.text(this.overlay,titles[kind],0,156,32,INK);
         }
-        if(kind==='levels'){
-            this.text(this.overlay,`参数图案试玩 · 第 ${this.page*6+1}—${this.page*6+6} 关`,0,108,20,MUTED);
-            for(let row=0;row<6;row++){
-                const i=this.page*6+row;
-                this.button(this.overlay,`${i+1}  ${solarTermForLevel(i).name} · ${levelTitle(i)}`,0,53-row*49,450,()=>this.openLevel(i),i===this.index,42);
-            }
-            this.button(this.overlay,'上一页',-188,-251,155,()=>{this.page=Math.max(0,this.page-1);this.showModal('levels');},false,45);
-            this.button(this.overlay,'返回',0,-251,155,()=>this.closeModal(),false,45);
-            this.button(this.overlay,'下一页',188,-251,155,()=>{this.page++;this.showModal('levels');},false,45);
-        }else if(kind==='rank'){
+        if(kind==='rank'){
             this.showRankCanvas();
             this.panel(this.overlay,279,259,58,58,'#718345',29);
             this.text(this.overlay,'×',279,259,42,'#FFFFFF',52).isBold=true;

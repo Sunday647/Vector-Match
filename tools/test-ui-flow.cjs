@@ -1,7 +1,7 @@
 require('./ts-loader.cjs');
 const assert=require('assert'),Module=require('module');
 const original=Module._load,storage=new Map();
-Module._load=function(id,...args){if(id==='cc')return {_decorator:{ccclass:()=>T=>T},Component:class{},sys:{localStorage:{setItem:(k,v)=>storage.set(k,v)}}};return original.call(this,id,...args);};
+Module._load=function(id,...args){if(id==='cc')return {_decorator:{ccclass:()=>T=>T},Component:class{},Color:class{fromHEX(s){return s;}},sys:{localStorage:{setItem:(k,v)=>storage.set(k,v)}}};return original.call(this,id,...args);};
 const {Main}=require('../assets/scripts/Main.ts');Module._load=original;
 const m=new Main();let labels=[];
 m.root={removeAllChildren(){labels=[];}};
@@ -31,3 +31,14 @@ globalThis.wx={getOpenDataContext:()=>({postMessage:msg=>{assert(initialized,'in
 m.make=(name,parent,w,h)=>({setPosition(){},setScale(x,y){assert.equal(w*x,676);assert.equal(h*y,845);},addComponent(){initialized=true;return {update(){}};}});
 m.showRankCanvas();assert(requested);delete globalThis.wx;
 console.log('PASS rank canvas uses engine design size and initializes before rendering');
+// Map dragging must work from home without a gameplay session and suppress taps.
+m.session=null;m.modal='levels';m.saved={completed:10};m.routeOffset=1420;m.renderRoute=()=>{};m.point=e=>e;m.gesture.clear();m.gesture.start(9,{x:0,y:0});m.activeButton={run:()=>{throw Error('drag activated node');}};
+m.moveTouch({x:0,y:-80,getID:()=>9});assert.equal(m.routeOffset,1500);assert.equal(m.activeButton,null);assert(m.gesture.cancelled);m.endTouch({x:0,y:-80,getID:()=>9});
+console.log('PASS mountain drag from home without session; no accidental node selection');
+m.routeLayer={removeAllChildren(){}};m.routeScenery={};let worldY=0;
+m.routeWorld={setPosition(x,y){worldY=y;}};m.routeTiles=new Map();m.routeButtons=[];m.routeHeight=920;m.height=1280;
+m.make=()=>({addComponent:()=>new Proxy({node:{setPosition(){}}},{get:(t,k)=>k in t?t[k]:()=>{}})});
+m.artwork=(parent,name,x,y,w,h)=>{assert.strictEqual(parent,m.routeScenery);return {destroy(){},y};};
+m.renderRoute=Main.prototype.renderRoute;m.routeOffset=1800;m.saved={completed:10};m.renderRoute();const before=m.buttons.find(b=>b.x===-115).y;const tile=m.routeTiles.get(1);
+m.routeOffset+=40;m.renderRoute();assert.equal(worldY,-1840);assert.strictEqual(m.routeTiles.get(1),tile,'reuse background tile while scrolling');assert.equal(m.buttons.find(b=>b.x===-115).y,before-40,'hit areas move with scenery');
+console.log('PASS mountain world: shared scroll transform, cached scenery, synchronized node hit areas');
