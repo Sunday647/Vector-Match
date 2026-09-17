@@ -13,7 +13,7 @@ font_path = '/System/Library/Fonts/STHeiti Medium.ttc'
 def text(x, y, value, size, color='#36516A'):
     draw.text((x*factor,y*factor),value,font=ImageFont.truetype(font_path,size*factor),fill=color)
 
-text(48, 28, '一箭清空 · 前 12 关', 36)
+text(48, 28, '萌箭消消 · 前 12 关', 36)
 text(48, 82, '全图路径 / 四向交错 / 实际关卡生成结果', 19, '#8091A1')
 for index, sample in enumerate(samples):
     col, row = index % 3, index // 3

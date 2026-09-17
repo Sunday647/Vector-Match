@@ -35,7 +35,7 @@ def make_logo():
     cat.thumbnail((470, 330), Image.Resampling.LANCZOS)
     im.alpha_composite(logo, ((720 - logo.width) // 2, 18))
     im.alpha_composite(cat, ((720 - cat.width) // 2, 260))
-    im.save(BUILD / "logo.png", optimize=True)
+    im.quantize(colors=64, method=Image.Quantize.FASTOCTREE).save(BUILD / "logo.png", optimize=True)
 
 
 def make_slogan():

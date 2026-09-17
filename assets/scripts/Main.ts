@@ -25,6 +25,7 @@ export class Main extends Component {
     private saved:any={};private sound=true;private music=true;private audio!:AudioSource;private bgmAudio!:AudioSource;private tones:AudioClip[]=[];private bgm:AudioClip|null=null;
     private screen='home';private zoomTrack:Graphics|null=null;private zoomY=0;private sliding=false;
     private loadingCat:Node|null=null;private loadingTime=0;private generationReset=false;
+    private adClaimPending=false;
     private cloudEnabled=false;private cloudSyncing=false;private rewardedAdEnabled=false;
     private routeWorld:Node|null=null;private routeScenery:Node|null=null;private routeTiles=new Map<number,Node>();private routeLayer:Node|null=null;private routeOffset=0;private routeHeight=0;private routeButtons:Button[]=[];
     private rankView:SubContextView|null=null;private rankTime=0;
@@ -96,6 +97,7 @@ export class Main extends Component {
     }
     private forestBackground(){
         this.artwork(this.root,'forest',0,0,720,this.height,true);
+        const sign=this.text(this.root,'萌箭消消',274,this.height*.289,23,'#603618',124);sign.isBold=true;sign.node.angle=19;
     }
     private drawHearts(){
         if(!this.heartArt)return;const g=this.heartArt;g.clear();
@@ -110,7 +112,7 @@ export class Main extends Component {
         this.panel(this.root,0,0,740,this.height+20,PAPER,0);
         this.artwork(this.root,'forest-cat',0,0,720,this.height,true);
         this.button(this.root,'⚙',294,top-150,60,()=>this.showModal('settings'),false,60);
-        this.text(this.root,'一箭清空',0,top-this.height*.18,64,'#603618',540).isBold=true;
+        this.artwork(this.root,'home-title',0,top-this.height*.18,460,142);
         const y=top-this.height*.70;
         this.text(this.root,`已通关${this.nextLevel()}关`,0,top-this.height*.568,25,'#603618',270).isBold=true;
         this.text(this.root,'开始游戏',0,y+15,46,'#603618',500).isBold=true;
@@ -141,6 +143,8 @@ export class Main extends Component {
         this.generation=null;this.generationForeground=false;this.loadingCat=null;
         this.index=index;this.session=new Session(this.levels[index]);
         if(!reset&&this.saved.attempts?.[this.session.level.id])this.session.restore(this.saved.attempts[this.session.level.id]);
+        // Re-entering a finished attempt starts a playable round; only live attempts resume.
+        if(this.session.status!=='playing')this.session=new Session(this.levels[index]);
         this.hint='';this.busy=false;this.leaving=null;this.wrong=null;this.shakeTime=0;this.modal='';this.gesture.clear();this.activeButton=null;
         this.buildUI();this.resetView();this.draw();this.updateHUD();this.save();
         if(this.session.status!=='playing')this.showModal(this.session.status);
@@ -213,13 +217,21 @@ export class Main extends Component {
     private message(s:string){this.toast=s;this.toastTime=3;if(this.toastLabel)this.toastLabel.string=s;}
     private useHint(){if(this.busy||this.session.status!=='playing')return;if(this.session.hintUsed){this.message('本局提示已使用，试着放大观察');return;}const a=this.session.level.arrows.find(a=>canExit(a,this.session.level,this.session.removed));if(!a){this.message('关卡状态异常，请重新挑战');return;}this.session.hintUsed=true;this.hint=a.id;this.save();this.draw();this.message('光圈里的箭头，可以自由离开');}
     private async claimAdHeart(){
+        if(this.adClaimPending)return;
         if(!this.session||!canClaimAdReward(this.saved,this.session.level.id)){this.showModal('lost');return;}
-        if(!this.rewardedAdEnabled){this.showModal('lost');this.text(this.overlay,'广告暂时不可用，请稍后再试',0,-238,20,MUTED);return;}
-        const result=await showRewardedAd();
+        if(!this.rewardedAdEnabled){this.showModal('lost');this.text(this.overlay,'广告暂时不可用，请稍后再试',0,-355*Math.min(1,(this.height-160)/860),18,'#896A48',470);return;}
+        const session=this.session,attemptId=session.attemptId;
+        this.adClaimPending=true;
+        let result;
+        try{result=await showRewardedAd();}catch{result='error';}finally{this.adClaimPending=false;}
+        // Loading is asynchronous: the player may have left or restarted this round.
+        if(this.session!==session||session.attemptId!==attemptId||this.screen!=='game'||this.modal!=='lost'||session.status!=='lost')return;
+        if(result==='busy')return;
         if(result==='rewarded'){
+            if(!canClaimAdReward(this.saved,session.level.id)){this.showModal('lost');return;}
             this.session.addHeart(3);this.saved=markAdReward(this.saved,this.session.level.id);this.save();this.closeModal();this.updateHUD();this.draw();this.message('爱心 +1，继续慢慢解开');
         }else{
-            this.showModal('lost');this.text(this.overlay,result==='closed'?'完整看完广告才会获得爱心':'广告暂时加载失败，请稍后再试',0,-238,20,MUTED);
+            this.showModal('lost');this.text(this.overlay,result==='closed'?'完整看完广告才会获得爱心':'广告暂时加载失败，请稍后再试',0,-355*Math.min(1,(this.height-160)/860),18,'#896A48',470);
         }
     }
     private tap(p:Point){if(this.busy||this.modal||this.session.status!=='playing')return;const local={x:(p.x-this.pan.x)/this.scale/this.pitch+(this.session.level.width-1)/2,y:(p.y-this.by-this.pan.y)/this.scale/this.pitch+(this.session.level.height-1)/2};
@@ -328,11 +340,57 @@ export class Main extends Component {
         this.buttons.push({x:0,y:-265*k,w:410*k,h:85*k,run:()=>this.openLevel(this.index+1,true)});
         this.buttons.push({x:0,y:-352*k,w:280*k,h:62*k,run:()=>this.showHome()});this.play(2);
     }
+    private forestDialog(kind:'lost'|'settings'){
+        const k=Math.min(1,(this.height-160)/860),panel=this.make('Forest dialog',this.overlay,640,860);
+        panel.setScale(k,k,1);this.artwork(panel,'forest-dialog',0,0,640,860,true);
+        const ink='#603618';
+        this.text(panel,kind==='lost'?'慢慢来，再试一次':'设置',0,172,kind==='lost'?34:44,ink,440).isBold=true;
+        // All hit areas use the same scale as the illustrated composition.
+        const hit=(x:number,y:number,w:number,h:number,run:()=>void)=>this.buttons.push({x:x*k,y:y*k,w:w*k,h:h*k,run});
+        const wood=(label:string,x:number,y:number,w:number,h:number,run:()=>void,primary=false)=>{
+            this.panel(panel,x,y-5,w,h,'#906039',18);this.panel(panel,x,y,w,h,primary?'#E8B55F':'#F3D49B',18);
+            const g=this.make('Wood grain',panel,w,h).addComponent(Graphics);g.node.setPosition(x,y);
+            g.lineWidth=2;g.strokeColor=C('#FFF0C680');g.roundRect(-w/2+5,-h/2+5,w-10,h-10,14);g.stroke();
+            g.strokeColor=C('#B8823830');g.lineWidth=1;
+            for(const yy of [-h/2+13,h/2-13]){g.moveTo(-w/2+18,yy);g.bezierCurveTo(-w/4,yy+3,w/4,yy-3,w/2-18,yy);g.stroke();}
+            this.text(panel,label,x,y,primary?29:25,ink,w-22).isBold=true;hit(x,y,w,h,run);
+        };
+        if(kind==='settings'){
+            const row=(label:string,on:boolean,y:number,run:()=>void)=>{
+                this.panel(panel,0,y-3,470,94,'#C7AB7F',18);this.panel(panel,0,y,470,94,'#F9EBCF',18);
+                const l=this.text(panel,label,-57,y,29,ink,170);l.horizontalAlign=Label.HorizontalAlign.LEFT;l.isBold=true;
+                const icon=this.make('Audio icon',panel,42,42).addComponent(Graphics);icon.node.setPosition(-190,y);icon.fillColor=C(ink);icon.strokeColor=C(ink);icon.lineWidth=3;
+                if(label==='音效'){icon.moveTo(-18,-8);icon.lineTo(-9,-8);icon.lineTo(3,-18);icon.lineTo(3,18);icon.lineTo(-9,8);icon.lineTo(-18,8);icon.close();icon.fill();icon.moveTo(10,-12);icon.bezierCurveTo(22,-6,22,6,10,12);icon.stroke();}
+                else{icon.moveTo(-8,-9);icon.lineTo(-8,15);icon.lineTo(15,20);icon.lineTo(15,-4);icon.stroke();icon.ellipse(-14,-11,8,6);icon.fill();icon.ellipse(9,-6,8,6);icon.fill();}
+                const g=this.make('Forest switch',panel,108,56).addComponent(Graphics);g.node.setPosition(160,y);
+                g.fillColor=C(on?'#718A43':'#AAA28D');g.roundRect(-52,-26,104,52,26);g.fill();g.lineWidth=2;g.strokeColor=C(on?'#455C29':'#7F7562');g.stroke();
+                g.fillColor=C('#FFF1D2');g.circle(on?25:-25,0,21);g.fill();g.strokeColor=C('#CBB48B');g.stroke();
+                hit(0,y,470,94,run);
+            };
+            row('音效',this.sound,25,()=>{this.toggleSound();this.showModal('settings');});
+            row('背景音乐',this.music,-100,()=>{this.toggleMusic();this.showModal('settings');});
+            wood('返回主页',0,-267,380,76,()=>this.showHome(),true);
+            this.panel(panel,266,180,58,58,'#718345',29);this.text(panel,'×',266,180,42,'#FFF8E4',54).isBold=true;
+            hit(266,180,68,68,()=>this.closeModal());
+        }else{
+            const g=this.make('Empty hearts',panel,240,64).addComponent(Graphics);g.node.setPosition(0,62);
+            for(const x of [-70,0,70]){g.fillColor=C('#E8D6B2');g.strokeColor=C('#B18C60');g.lineWidth=3;g.moveTo(x,-25);g.bezierCurveTo(x-46,3,x-21,43,x,22);g.bezierCurveTo(x+21,43,x+46,3,x,-25);g.close();g.fill();g.stroke();}
+            this.text(panel,'爱心用完啦',0,-9,28,ink,440).isBold=true;
+            this.text(panel,'补充一颗爱心，继续挑战',0,-51,23,ink,470);
+            const eligible=canClaimAdReward(this.saved,this.session.level.id);
+            if(eligible){wood('▶  看广告，爱心 +1',0,-133,470,78,()=>this.claimAdHeart(),true);this.text(panel,'保留本局进度，继续游戏',0,-193,20,ink,460);}
+            else this.text(panel,'本关爱心补充已用完，再试一次吧',0,-143,22,ink,480);
+            wood('再试一次',-125,-266,224,66,()=>this.openLevel(this.index,true));
+            wood('返回主页',125,-266,224,66,()=>this.showHome());
+            this.text(panel,'重新开始本关',-125,-314,18,'#896A48',220);
+        }
+    }
     private showModal(kind:string){
         if(this.busy)return;this.modal=kind;this.rankView=null;this.gesture.clear();this.activeButton=null;this.buttons=[];this.overlay.removeAllChildren();this.overlay.active=true;
-        this.panel(this.overlay,0,0,740,this.height+20,kind==='rank'||kind==='won'?'#27303ACC':PAPER,0);
+        this.panel(this.overlay,0,0,740,this.height+20,['rank','won','settings','lost'].includes(kind)?'#27303ACC':PAPER,0);
         if(kind==='levels'){this.showRoute();return;}
         if(kind==='won'){this.showVictory();return;}
+        if(kind==='settings'||kind==='lost'){this.forestDialog(kind);return;}
         if(kind==='rank'){
             this.artwork(this.overlay,'forest-rank',0,-22,676,845,true);
         }else{
@@ -346,10 +404,6 @@ export class Main extends Component {
             this.panel(this.overlay,279,259,58,58,'#718345',29);
             this.text(this.overlay,'×',279,259,42,'#FFFFFF',52).isBold=true;
             this.buttons.push({x:279,y:259,w:70,h:70,run:()=>this.closeModal()});
-        }else if(kind==='settings'){
-            this.switchRow(this.overlay,'音效',this.sound,0,48,400,()=>{this.toggleSound();this.showModal('settings');});
-            this.switchRow(this.overlay,'背景音乐',this.music,0,-37,400,()=>{this.toggleMusic();this.showModal('settings');});
-            this.button(this.overlay,'返回主页',0,-132,400,()=>this.closeModal());
         }else if(kind==='pause'){
             this.text(this.overlay,'缩放和拖动都不会扣心',0,96,21,MUTED);
             this.button(this.overlay,'继续解开',0,18,400,()=>this.closeModal(),true);
@@ -360,11 +414,6 @@ export class Main extends Component {
             this.text(this.overlay,'本局进度会清空，恢复三颗心',0,77,22,MUTED);
             this.button(this.overlay,'重新开始',0,-20,400,()=>this.openLevel(this.index,true),true);
             this.button(this.overlay,'继续当前挑战',0,-110,400,()=>this.closeModal());
-        }else if(kind==='lost'){
-            this.text(this.overlay,'放大看看，下次会更从容',0,77,22,MUTED);
-            if(canClaimAdReward(this.saved,this.session.level.id))this.button(this.overlay,'看广告 +1 心继续',0,-15,400,()=>{this.claimAdHeart();},true);
-            this.button(this.overlay,'再试一次',0,-102,400,()=>this.openLevel(this.index,true));
-            this.button(this.overlay,'返回主页',0,-189,400,()=>this.showHome());
         }else{
             this.text(this.overlay,kind==='won'?'让颜色散去，给自己留一点轻松':'放大看看，下次会更从容',0,77,22,MUTED);
             this.button(this.overlay,kind==='won'?'下一幅风景':'再试一次',0,-20,400,()=>this.openLevel(kind==='won'?this.index+1:this.index,true),true);
