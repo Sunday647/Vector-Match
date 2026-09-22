@@ -1,3 +1,4 @@
+import { isAdvancedLevel } from './ShapeGrammar';
 import {Level, Point, validate} from './Rules';
 
 /** Build one contour around a whole-silhouette spanning tree, then cut paths
@@ -57,7 +58,7 @@ const arrows=result.arrows.map((a,i)=>{
  const cx=points.reduce((n,p)=>n+p.x,0)/points.length/(W*2),cy=points.reduce((n,p)=>n+p.y,0)/points.length/(H*2);
  return {id:'global-'+i,points,color:'#E9AF4B',colorBand:cy>.73?0:cx<.3?1:cx>.7?3:2};
 });
-const level:Level={id:`generated-v2-${options.index+1}-contour-v4`,version:4,name:raw.name,subtitle:options.index===2?'极限挑战 · 四向交织':'解开彩线，让小风景慢慢舒展',width:W*2+2,height:H*2+2,arrows:arrows.reverse()};
+const level:Level={id:`generated-v2-${options.index+1}-contour-${isAdvancedLevel(options.index)?'v5-demo':'v4'}`,version:isAdvancedLevel(options.index)?5:4,name:raw.name,subtitle:options.index===2?'极限挑战 · 四向交织':'解开彩线，让小风景慢慢舒展',width:W*2+2,height:H*2+2,arrows:arrows.reverse()};
 validate(level);
 return {level,coverage:result.coverage};
 }

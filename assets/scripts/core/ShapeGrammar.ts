@@ -86,11 +86,11 @@ export function silhouetteSimilarity(a:number[],b:number[]):number{
  for(const mirror of [false,true]){let overlap=0,union=0;for(let y=0;y<SIZE;y++)for(let x=0;x<SIZE;x++){const aa=a[y*SIZE+x],bb=b[y*SIZE+(mirror?SIZE-1-x:x)];if(aa&&bb)overlap++;if(aa||bb)union++;}best=Math.max(best,overlap/Math.max(1,union));}
  return best;
 }
-function candidate(index:number,variant:number):Silhouette{
+function candidate(index:number,variant:number,width=39,height=43):Silhouette{
  const seed=(Math.imul(index+1,0x45d9f3b)^0x23af8301)>>>0;
  const rnd=(shift:number)=>((seed>>>shift)&255)/255;
  const sx=.92+rnd(0)*.06,sy=.92+rnd(8)*.06,lean=(rnd(16)-.5)*.04;
- const motif=index%6,width=39,height=43,mask=grammar(motif,variant),cells:Point[]=[];
+ const motif=index%6,mask=grammar(motif,variant),cells:Point[]=[];
  for(let y=1;y<height-1;y++)for(let x=1;x<width-1;x++)if(mask((x/(width-1)*2-1)/sx-lean,(y/(height-1)*2-1)/sy))cells.push({x,y});
  return {seed,width,height,cells,variant,name:titles[motif][variant],fingerprint:silhouetteFingerprint(cells),similarity:0};
 }
@@ -140,3 +140,10 @@ export function* prepareShape(index:number):Generator<void,Silhouette,unknown>{
 export function shapeForLevel(index:number):Silhouette{
  const task=prepareShape(index);let result=task.next();while(!result.done)result=task.next();return result.value;
 }
+
+// Resample the selected recipe without changing the ordinary-level schedule.
+export function advancedShape(index:number,s:Silhouette):Silhouette {
+ return isAdvancedLevel(index)?candidate(index,s.variant,55,61):s;
+}
+
+export function isAdvancedLevel(index:number):boolean {return (index+1)%5===0;}

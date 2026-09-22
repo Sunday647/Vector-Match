@@ -1,6 +1,8 @@
+import { isAdvancedLevel } from './core/ShapeGrammar';
 import { _decorator, Component, Node, Graphics, Color, Label, UITransform, Vec3, view, ResolutionPolicy, Mask, resources, input, Input, EventTouch, EventMouse, sys, game, Game, AudioSource, AudioClip, Sprite, SpriteFrame, SubContextView } from 'cc';
 import { Arrow, Level, Point, Session, Gesture, canExit, hitArrow, direction, LINE_WIDTH, HEAD_LENGTH, HEAD_WIDTH } from './core/Rules';
 import { generateLevel, levelTitle, Generated } from './core/Generator';
+import { advancedPalette } from './core/ArrowColors';
 import { solarTermForLevel } from './core/SolarTerms';
 import { canClaimAdReward, initCloud, loadCloudProgress, markAdReward, mergeProgress, saveCloudProgress } from './core/CloudProgress';
 import { initRewardedAd, showRewardedAd } from './core/RewardedAd';
@@ -73,6 +75,33 @@ export class Main extends Component {
         g.fillColor=C('#B9B19D');g.ellipse(-104*flip,-66,30,14);g.fill();g.fillColor=C('#D2CAB8');g.ellipse(-74*flip,-70,24,11);g.fill();
     }
 
+    private settingsIcon(parent:Node,x:number,y:number,diameter:number){
+        const n=this.make('Settings gear',parent,diameter,diameter);n.setPosition(x,y);
+        const g=n.addComponent(Graphics),outer=diameter*.90/2,root=outer*.77;
+        // Light glass tint lets the forest show through without an opaque button shadow.
+        g.fillColor=new Color(242,249,234,30);g.circle(0,0,diameter/2);g.fill();
+        g.strokeColor=new Color(255,245,221,170);g.lineWidth=1.2;
+        g.circle(0,0,diameter/2-.5);g.stroke();
+        g.fillColor=C('#FFF5DD');g.lineJoin=Graphics.LineJoin.ROUND;
+        // Draw an annular gear so its centre remains transparent too.
+        const points:{x:number;y:number;a:number}[]=[];
+        for(let i=0;i<8;i++)for(let j=0;j<4;j++){
+            const a=(i+(j-1)/4)*Math.PI/4,r=j===1||j===2?outer:root;
+            points.push({x:Math.cos(a)*r,y:Math.sin(a)*r,a});
+        }
+        const hole=outer*.34;
+        for(let i=0;i<points.length;i++){
+            const p=points[i],q=points[(i+1)%points.length];
+            g.moveTo(p.x,p.y);g.lineTo(q.x,q.y);
+            g.lineTo(Math.cos(q.a)*hole,Math.sin(q.a)*hole);
+            g.lineTo(Math.cos(p.a)*hole,Math.sin(p.a)*hole);g.close();g.fill();
+        }
+        // Outline only the silhouette and centre, keeping the ring's segment seams invisible.
+        g.strokeColor=C('#405634');g.lineWidth=1.2;
+        points.forEach((p,i)=>{if(i===0)g.moveTo(p.x,p.y);else g.lineTo(p.x,p.y);});
+        g.close();g.stroke();g.circle(0,0,hole);g.stroke();
+    }
+
     private homeIcon(parent:Node,kind:'route'|'rank',x:number,y:number){
         const iconNode=this.make('Home icon',parent,66,66);if(!(iconNode as any).setPosition||!(iconNode as any).addComponent)return;iconNode.setPosition(x,y);
         const g=iconNode.addComponent(Graphics);g.lineCap=Graphics.LineCap.ROUND;g.lineJoin=Graphics.LineJoin.ROUND;
@@ -111,7 +140,8 @@ export class Main extends Component {
         this.root.removeAllChildren();this.buttons=[];this.zoomTrack=null;const top=this.height/2;
         this.panel(this.root,0,0,740,this.height+20,PAPER,0);
         this.artwork(this.root,'forest-cat',0,0,720,this.height,true);
-        this.button(this.root,'⚙',294,top-150,60,()=>this.showModal('settings'),false,60);
+        this.buttons.push({x:294,y:top-150,w:60,h:60,run:()=>this.showModal('settings')});
+        this.settingsIcon(this.root,294,top-150,60);
         this.artwork(this.root,'home-title',0,top-this.height*.18,460,142);
         const y=top-this.height*.70;
         this.text(this.root,`已通关${this.nextLevel()}关`,0,top-this.height*.568,25,'#603618',270).isBold=true;
@@ -152,7 +182,8 @@ export class Main extends Component {
 
     }
     private arrowColor(a:Arrow):string{
-        const palette=solarTermForLevel(this.index).colors;
+        const base=solarTermForLevel(this.index).colors;
+        const palette=isAdvancedLevel(this.index)?advancedPalette(this.index,base):base;
         return palette[Math.max(0,Math.min(3,a.colorBand||0))];
     }
     private buildUI(){

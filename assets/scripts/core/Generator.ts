@@ -1,5 +1,6 @@
 import { Level, canExit } from './Rules';
-import { shapeForLevel, prepareShape } from './ShapeGrammar';
+import { shapeForLevel, prepareShape, advancedShape, isAdvancedLevel } from './ShapeGrammar';
+import { balanceArrowColors } from './ArrowColors';
 import { generateExtreme } from './ExtremeChallenge';
 
 export const GENERATOR_VERSION = 4;
@@ -22,12 +23,13 @@ export function chainLimit(index:number):number {
 }
 export function* generateLevel(index:number):Generator<void,Generated,unknown> {
     if(!Number.isSafeInteger(index)||index<0)throw Error('Invalid level index');
-    yield;const s=yield* prepareShape(index);yield;
+    yield;const s=advancedShape(index,yield* prepareShape(index));yield;
     let lastError:Error|null=null;
     for(let trial=0;trial<(index===2?1:8);trial++){
         const seed=index===2?102:s.seed+trial*7919;
         try {
             const {level,coverage}=yield* generateExtreme(s,random(seed),{index,chains:chainLimit(index)});
+            if(isAdvancedLevel(index))balanceArrowColors(level);
             return {level,coverage,seed,variant:s.variant,silhouette:s.fingerprint,
                 silhouetteSimilarity:s.similarity,signature:signature(level),
                 initialExits:level.arrows.filter(a=>canExit(a,level)).length};

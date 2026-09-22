@@ -3,7 +3,7 @@ const assert=require('assert'),Module=require('module');
 const original=Module._load,storage=new Map();
 Module._load=function(id,...args){if(id==='cc')return {_decorator:{ccclass:()=>T=>T},Component:class{},Color:class{fromHEX(s){return s;}},sys:{localStorage:{setItem:(k,v)=>storage.set(k,v)}}};return original.call(this,id,...args);};
 const {Main}=require('../assets/scripts/Main.ts');Module._load=original;
-const m=new Main();let labels=[];
+const m=new Main();m.settingsIcon=()=>{};let labels=[];
 m.root={removeAllChildren(){labels=[];}};
 m.make=()=>({active:false,removeAllChildren(){}});
 m.panel=()=>{};m.artwork=()=>{};
