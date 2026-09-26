@@ -1,16 +1,18 @@
 import { isAdvancedLevel } from './core/ShapeGrammar';
 import { _decorator, Component, Node, Graphics, Color, Label, UITransform, Vec3, view, ResolutionPolicy, Mask, resources, input, Input, EventTouch, EventMouse, sys, game, Game, AudioSource, AudioClip, Sprite, SpriteFrame, SubContextView } from 'cc';
 import { Arrow, Level, Point, Session, Gesture, canExit, hitArrow, direction, LINE_WIDTH, HEAD_LENGTH, HEAD_WIDTH } from './core/Rules';
-import { generateLevel, levelTitle, Generated } from './core/Generator';
+import { generateLevel, useLegacyShape, levelTitle, Generated } from './core/Generator';
 import { advancedPalette } from './core/ArrowColors';
 import { solarTermForLevel } from './core/SolarTerms';
 import { canClaimAdReward, initCloud, loadCloudProgress, markAdReward, mergeProgress, saveCloudProgress } from './core/CloudProgress';
 import { initRewardedAd, showRewardedAd } from './core/RewardedAd';
 import { reportBestLevel, requestFriendRank } from './core/Leaderboard';
+import { openPrivacyContract, requireLeaderboardPrivacy } from './core/Privacy';
 import { ROUTE_STEP, ROUTE_TILE_HEIGHT, ROUTE_TILE_CENTER, routeX, clampRoute, visibleRoute } from './core/Route';
 const {ccclass}=_decorator;
 const INK='#405634', MUTED='#87916B', BLUE='#78934B', PAPER='#FFFCF5';
 const STORAGE_KEY='one-arrow-clear-generator-demo-v1';
+const PRIVACY_RANK_KEY='mengjian-rank-privacy-v1';
 const WECHAT_CLOUD_ENV_ID='';
 const REWARDED_AD_UNIT_ID='';
 const VISUAL_LINE_GAIN=1.62, VISUAL_HEAD_GAIN=1.45;
@@ -28,9 +30,11 @@ export class Main extends Component {
     private screen='home';private zoomTrack:Graphics|null=null;private zoomY=0;private sliding=false;
     private loadingCat:Node|null=null;private loadingTime=0;private generationReset=false;
     private adClaimPending=false;
+    private rankPrivacyDenied=false;
     private cloudEnabled=false;private cloudSyncing=false;private rewardedAdEnabled=false;
     private routeWorld:Node|null=null;private routeScenery:Node|null=null;private routeTiles=new Map<number,Node>();private routeLayer:Node|null=null;private routeOffset=0;private routeHeight=0;private routeButtons:Button[]=[];
     private rankView:SubContextView|null=null;private rankTime=0;
+    private privacyHint:Label|null=null;
     onLoad(){
         view.setDesignResolutionSize(720,1280,ResolutionPolicy.FIXED_WIDTH);
         this.height=view.getVisibleSize().height;this.bh=Math.max(460,this.height-420);this.by=-5;
@@ -152,15 +156,15 @@ export class Main extends Component {
         this.text(this.root,'关卡路线',-153,row,28,'#603618',220).isBold=true;
         this.text(this.root,'排行榜',153,row,28,'#603618',220).isBold=true;
         this.buttons.push({x:-153,y:top-this.height*.88,w:268,h:this.height*.16,run:()=>{this.page=Math.floor(this.nextLevel()/6);this.showModal('levels');}});
-        this.buttons.push({x:153,y:top-this.height*.88,w:268,h:this.height*.16,run:()=>this.showModal('rank')});
+        this.buttons.push({x:153,y:top-this.height*.88,w:268,h:this.height*.16,run:()=>this.openRank()});
         this.overlay=this.make('Modal',this.root);this.overlay.active=false;
         this.loadingCat=null;
-        if(!this.levels[this.nextLevel()]){this.generation=generateLevel(this.nextLevel());this.generationIndex=this.nextLevel();this.generationForeground=false;}
+        if(!this.levels[this.nextLevel()]){this.generation=generateLevel(this.nextLevel(),useLegacyShape(this.nextLevel(),this.saved.attempts));this.generationIndex=this.nextLevel();this.generationForeground=false;}
     }
     private openLevel(index:number,reset=false){
         this.screen='game';
         if(!this.levels[index]){
-            if(!this.generation||this.generationIndex!==index)this.generation=generateLevel(index);
+            if(!this.generation||this.generationIndex!==index)this.generation=generateLevel(index,useLegacyShape(index,this.saved.attempts));
             this.generationIndex=index;this.generationForeground=true;this.generationReset=reset;
             this.busy=true;this.buttons=[];this.gesture.clear();this.activeButton=null;
             if(this.overlay){this.overlay.active=true;this.overlay.removeAllChildren();this.panel(this.overlay,0,0,740,this.height+20,PAPER,0);}
@@ -178,7 +182,7 @@ export class Main extends Component {
         this.hint='';this.busy=false;this.leaving=null;this.wrong=null;this.shakeTime=0;this.modal='';this.gesture.clear();this.activeButton=null;
         this.buildUI();this.resetView();this.draw();this.updateHUD();this.save();
         if(this.session.status!=='playing')this.showModal(this.session.status);
-        if(!this.levels[index+1]){this.generation=generateLevel(index+1);this.generationIndex=index+1;this.generationForeground=false;}
+        if(!this.levels[index+1]){this.generation=generateLevel(index+1,useLegacyShape(index+1,this.saved.attempts));this.generationIndex=index+1;this.generationForeground=false;}
 
     }
     private arrowColor(a:Arrow):string{
@@ -246,6 +250,55 @@ export class Main extends Component {
     private toggleSound(){this.sound=!this.sound;this.save();}
     private toggleMusic(){this.music=!this.music;this.playMusic();this.save();}
     private message(s:string){this.toast=s;this.toastTime=3;if(this.toastLabel)this.toastLabel.string=s;}
+    private async openRank(){
+        if(this.busy)return;
+        if(sys.localStorage.getItem(PRIVACY_RANK_KEY)!=='yes'){this.showRankPrivacyNotice();return;}
+        const result=await requireLeaderboardPrivacy();
+        if(result==='denied'){
+            this.rankPrivacyDenied=true;
+            this.showModal('rank');
+            return;
+        }
+        this.rankPrivacyDenied=false;
+        this.showModal('rank');
+    }
+    private showRankPrivacyNotice(){
+        this.modal='privacy';this.rankView=null;this.gesture.clear();this.activeButton=null;this.buttons=[];this.overlay.removeAllChildren();this.overlay.active=true;
+        this.panel(this.overlay,0,0,740,this.height+20,'#27303ACC',0);
+        this.panel(this.overlay,0,-3,584,548,'#9A6A42',32);
+        this.panel(this.overlay,0,4,584,548,'#FFF2D7',32);
+        this.panel(this.overlay,0,178,430,76,'#E2B36C',24);
+        this.text(this.overlay,'查看好友排行',0,178,36,'#603618',390).isBold=true;
+        const body='需要使用你的昵称、头像和微信朋友关系，只用于展示好友关卡进度排名。不同意也可以正常游戏。';
+        this.text(this.overlay,body,0,67,24,'#603618',462);
+        this.privacyHint=this.text(this.overlay,'',0,-26,18,'#896A48',460);
+        this.panel(this.overlay,0,-93,420,72,'#906039',22);
+        this.panel(this.overlay,0,-88,420,72,'#B8753B',22);
+        this.text(this.overlay,'同意查看排行',0,-88,27,'#FFF8E4',380).isBold=true;
+        this.buttons.push({x:0,y:-88,w:420,h:72,run:()=>this.acceptRankPrivacy()});
+        this.panel(this.overlay,0,-174,420,62,'#D8C8A7',20);
+        this.panel(this.overlay,0,-169,420,62,'#FFF8E8',20);
+        this.text(this.overlay,'隐私保护指引',0,-169,24,INK,380);
+        this.buttons.push({x:0,y:-169,w:420,h:62,run:()=>this.viewPrivacyContract()});
+        this.text(this.overlay,'暂不查看',0,-246,22,'#725739',220);
+        this.buttons.push({x:0,y:-246,w:240,h:54,run:()=>this.showHome()});
+    }
+    private async viewPrivacyContract(){
+        if(this.privacyHint)this.privacyHint.string='正在打开隐私保护指引…';
+        const opened=await openPrivacyContract();
+        if(!opened&&this.privacyHint)this.privacyHint.string='暂时无法打开，请确认后台隐私保护指引已发布';
+    }
+    private async acceptRankPrivacy(){
+        const result=await requireLeaderboardPrivacy();
+        if(result==='denied'){
+            this.rankPrivacyDenied=true;
+            this.showModal('rank');
+            return;
+        }
+        sys.localStorage.setItem(PRIVACY_RANK_KEY,'yes');
+        this.rankPrivacyDenied=false;
+        this.showModal('rank');
+    }
     private useHint(){if(this.busy||this.session.status!=='playing')return;if(this.session.hintUsed){this.message('本局提示已使用，试着放大观察');return;}const a=this.session.level.arrows.find(a=>canExit(a,this.session.level,this.session.removed));if(!a){this.message('关卡状态异常，请重新挑战');return;}this.session.hintUsed=true;this.hint=a.id;this.save();this.draw();this.message('光圈里的箭头，可以自由离开');}
     private async claimAdHeart(){
         if(this.adClaimPending)return;
@@ -431,7 +484,8 @@ export class Main extends Component {
             this.text(this.overlay,titles[kind],0,156,32,INK);
         }
         if(kind==='rank'){
-            this.showRankCanvas();
+            if(this.rankPrivacyDenied)this.showRankFallback('同意隐私保护指引后，可查看好友排行');
+            else this.showRankCanvas();
             this.panel(this.overlay,279,259,58,58,'#718345',29);
             this.text(this.overlay,'×',279,259,42,'#FFFFFF',52).isBold=true;
             this.buttons.push({x:279,y:259,w:70,h:70,run:()=>this.closeModal()});

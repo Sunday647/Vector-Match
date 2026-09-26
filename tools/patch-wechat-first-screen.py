@@ -79,6 +79,7 @@ def patch_open_data_context():
     game_json = BUILD / "game.json"
     data = json.loads(game_json.read_text())
     data["openDataContext"] = "openDataContext"
+    data["__usePrivacyCheck__"] = True
     game_json.write_text(json.dumps(data, ensure_ascii=False, indent=2))
 
 
